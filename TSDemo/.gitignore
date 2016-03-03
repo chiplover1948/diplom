@@ -1,0 +1,11 @@
+Build/
+Scripts/**/*.js
+Scripts/**/*.js.map
+bower_components/
+node_modules/
+typings/
+lib/
+.tscache/
+**/*.d.ts
+.vscode
+tsconfig.json
