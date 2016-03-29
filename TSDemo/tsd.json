@@ -6,13 +6,13 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "jquery/jquery.d.ts": {
-      "commit": "27d7b56688bfeba9c6fc1ce0ecb611d929982d44"
+      "commit": "12f9b621f914fe2b9486a74e0f2e130621837bfc"
     },
     "requirejs/require.d.ts": {
-      "commit": "27d7b56688bfeba9c6fc1ce0ecb611d929982d44"
+      "commit": "12f9b621f914fe2b9486a74e0f2e130621837bfc"
     },
     "emscripten/emscripten.d.ts": {
-      "commit": "b10e5ade29708bb0a7d21916a9fe289973520e89"
+      "commit": "12f9b621f914fe2b9486a74e0f2e130621837bfc"
     }
   }
 }
