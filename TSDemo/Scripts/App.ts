@@ -12,14 +12,14 @@ function ASMWrapper(Right: (t: number, v: Array<number>) => Array<number>, n: nu
     return Module.Runtime.addFunction((t, x, r) => {
 				var right = new Array<number>(n);
 				for (var i = 0; i < n; i++) {
-					r[i] = Module.getValue(x + i * 8, 'double');
+					right[i] = Module.getValue(x + i * 8, 'double');
 				}
 			    var dx = Right(t, right);
 				Module.HEAPF64.set(new Float64Array(dx), r/8);
 			});
 }
 
-function initVector(): Module.Vector {
+function initVector_(): Module.Vector {
     var p: any = {};
     p.deg = 0.0008;
     p.cat = 0.0008;
@@ -40,51 +40,51 @@ function initVector(): Module.Vector {
     p.R = 0.0019872;
     p.T = 298.15;
     var x0 = new Module.Vector(106);
-    x0.SetElement(1,p.Cmax);		// Annihilation
-    x0.SetElement(2,p.Cmax);		// Annihilation_1
-    x0.SetElement(3,p.Cmax);		// Annihilation_2
-    x0.SetElement(4,p.Cmax);		// Annihilation_3
-    x0.SetElement(5,p.Cmax);		// Annihilation_4
-    x0.SetElement(6,p.Cmax);		// Annihilation_5
-    x0.SetElement(7,p.Cmax);		// Annihilation_6
-    x0.SetElement(8,p.Cmax);		// Annihilation_7
-    x0.SetElement(9,p.Cmax);		// Annihilation_8
-    x0.SetElement(10,p.Cmax);		// Annihilation_9
-    x0.SetElement(11,p.Cmax);		// Annihilation_10
-    x0.SetElement(12,p.Cmax);		// Annihilation_11
-    x0.SetElement(13,p.Cmax);		// Annihilation_12
-    x0.SetElement(14,p.Cmax);		// Annihilation_13
-    x0.SetElement(15,p.Cmax);		// Annihilation_14
-    x0.SetElement(16,p.Cmax);		// Annihilation_15
-    x0.SetElement(17,p.Cmax);		// Catalysis
-    x0.SetElement(18,p.Cmax);		// Catalysis_1
-    x0.SetElement(19,p.Cmax);		// Catalysis_2
-    x0.SetElement(20,p.Cmax);		// Catalysis_3
-    x0.SetElement(21,p.Cmax);		// Catalysis_4
-    x0.SetElement(22,p.Cmax);		// Catalysis_5
-    x0.SetElement(23,p.Cmax);		// Catalysis_6
-    x0.SetElement(24,p.Cmax);		// Catalysis_7
-    x0.SetElement(25,p.Cmax);		// Catalysis'
-    x0.SetElement(26,p.Cmax);		// Catalysis'_1
-    x0.SetElement(27,p.Cmax);		// Catalysis'_2
-    x0.SetElement(28,p.Cmax);		// Catalysis'_3
-    x0.SetElement(29,p.Cmax);		// Catalysis'_4
-    x0.SetElement(30,p.Cmax);		// Catalysis'_5
-    x0.SetElement(31,p.Cmax);		// Catalysis'_6
-    x0.SetElement(32,p.Cmax);		// Catalysis'_7
-    x0.SetElement(33,p.Cmax);		// CatalysisInv
-    x0.SetElement(34,p.Cmax);		// CatalysisInv_1
-    x0.SetElement(35,p.Cmax);		// CatalysisInv'
-    x0.SetElement(36,p.Cmax);		// CatalysisInv'_1
-    x0.SetElement(37,p.Cmax);		// Degradation
-    x0.SetElement(38,p.Cmax);		// Degradation_1
-    x0.SetElement(39,p.Cmax);		// Degradation'
-    x0.SetElement(40,p.Cmax);		// Degradation'_1
-    x0.SetElement(43,p.x0);		// R
+    x0.SetElement(0,p.Cmax);		// Annihilation
+    x0.SetElement(1,p.Cmax);		// Annihilation_1
+    x0.SetElement(2,p.Cmax);		// Annihilation_2
+    x0.SetElement(3,p.Cmax);		// Annihilation_3
+    x0.SetElement(4,p.Cmax);		// Annihilation_4
+    x0.SetElement(5,p.Cmax);		// Annihilation_5
+    x0.SetElement(6,p.Cmax);		// Annihilation_6
+    x0.SetElement(7,p.Cmax);		// Annihilation_7
+    x0.SetElement(8,p.Cmax);		// Annihilation_8
+    x0.SetElement(9,p.Cmax);		// Annihilation_9
+    x0.SetElement(10,p.Cmax);		// Annihilation_10
+    x0.SetElement(11,p.Cmax);		// Annihilation_11
+    x0.SetElement(12,p.Cmax);		// Annihilation_12
+    x0.SetElement(13,p.Cmax);		// Annihilation_13
+    x0.SetElement(14,p.Cmax);		// Annihilation_14
+    x0.SetElement(15,p.Cmax);		// Annihilation_15
+    x0.SetElement(16,p.Cmax);		// Catalysis
+    x0.SetElement(17,p.Cmax);		// Catalysis_1
+    x0.SetElement(18,p.Cmax);		// Catalysis_2
+    x0.SetElement(19,p.Cmax);		// Catalysis_3
+    x0.SetElement(20,p.Cmax);		// Catalysis_4
+    x0.SetElement(21,p.Cmax);		// Catalysis_5
+    x0.SetElement(22,p.Cmax);		// Catalysis_6
+    x0.SetElement(23,p.Cmax);		// Catalysis_7
+    x0.SetElement(24,p.Cmax);		// Catalysis'
+    x0.SetElement(25,p.Cmax);		// Catalysis'_1
+    x0.SetElement(26,p.Cmax);		// Catalysis'_2
+    x0.SetElement(27,p.Cmax);		// Catalysis'_3
+    x0.SetElement(28,p.Cmax);		// Catalysis'_4
+    x0.SetElement(29,p.Cmax);		// Catalysis'_5
+    x0.SetElement(30,p.Cmax);		// Catalysis'_6
+    x0.SetElement(31,p.Cmax);		// Catalysis'_7
+    x0.SetElement(32,p.Cmax);		// CatalysisInv
+    x0.SetElement(33,p.Cmax);		// CatalysisInv_1
+    x0.SetElement(34,p.Cmax);		// CatalysisInv'
+    x0.SetElement(35,p.Cmax);		// CatalysisInv'_1
+    x0.SetElement(36,p.Cmax);		// Degradation
+    x0.SetElement(37,p.Cmax);		// Degradation_1
+    x0.SetElement(38,p.Cmax);		// Degradation'
+    x0.SetElement(39,p.Cmax);		// Degradation'_1
+    x0.SetElement(42,p.x0);		// R
     return x0;
 }
 
-function rightSide(t: number, x: Array<number>): Array<number> {
+function rightSide_(t: number, x: Array<number>): Array<number> {
     var p: any = {};
     p.deg = 0.0008;
     p.cat = 0.0008;
@@ -123,112 +123,112 @@ function rightSide(t: number, x: Array<number>): Array<number> {
     //var R = p.R;
     var T = p.T;
 
-    var Annihilation = x[1];
-    var Annihilation_1 = x[2];
-    var Annihilation_2 = x[3];
-    var Annihilation_3 = x[4];
-    var Annihilation_4 = x[5];
-    var Annihilation_5 = x[6];
-    var Annihilation_6 = x[7];
-    var Annihilation_7 = x[8];
-    var Annihilation_8 = x[9];
-    var Annihilation_9 = x[10];
-    var Annihilation_10 = x[11];
-    var Annihilation_11 = x[12];
-    var Annihilation_12 = x[13];
-    var Annihilation_13 = x[14];
-    var Annihilation_14 = x[15];
-    var Annihilation_15 = x[16];
-    var Catalysis = x[17];
-    var Catalysis_1 = x[18];
-    var Catalysis_2 = x[19];
-    var Catalysis_3 = x[20];
-    var Catalysis_4 = x[21];
-    var Catalysis_5 = x[22];
-    var Catalysis_6 = x[23];
-    var Catalysis_7 = x[24];
-    var Catalysis$ = x[25];
-    var Catalysis$_1 = x[26];
-    var Catalysis$_2 = x[27];
-    var Catalysis$_3 = x[28];
-    var Catalysis$_4 = x[29];
-    var Catalysis$_5 = x[30];
-    var Catalysis$_6 = x[31];
-    var Catalysis$_7 = x[32];
-    var CatalysisInv = x[33];
-    var CatalysisInv_1 = x[34];
-    var CatalysisInv$ = x[35];
-    var CatalysisInv$_1 = x[36];
-    var Degradation = x[37];
-    var Degradation_1 = x[38];
-    var Degradation$ = x[39];
-    var Degradation$_1 = x[40];
-    var L = x[41];
-    var L$ = x[42];
-    var R = x[43];
-    var sp53 = x[44];
-    var sp51 = x[45];
-    var sp52 = x[46];
-    var sp54 = x[47];
-    var sp55 = x[48];
-    var sp60 = x[49];
-    var sp56 = x[50];
-    var sp57 = x[51];
-    var sp61 = x[52];
-    var sp62 = x[53];
-    var sp65 = x[54];
-    var sp63 = x[55];
-    var sp64 = x[56];
-    var sp66 = x[57];
-    var V = x[58];
-    var sp69 = x[59];
-    var sp67 = x[60];
-    var sp68 = x[61];
-    var sp58 = x[62];
-    var sp70 = x[63];
-    var sp59 = x[64];
-    var R$ = x[65];
-    var sp75 = x[66];
-    var sp76 = x[67];
-    var sp77 = x[68];
-    var sp71 = x[69];
-    var sp72 = x[70];
-    var sp78 = x[71];
-    var sp79 = x[72];
-    var sp85 = x[73];
-    var sp86 = x[74];
-    var sp80 = x[75];
-    var sp81 = x[76];
-    var sp87 = x[77];
-    var sp88 = x[78];
-    var sp93 = x[79];
-    var sp94 = x[80];
-    var sp95 = x[81];
-    var sp89 = x[82];
-    var sp90 = x[83];
-    var sp96 = x[84];
-    var V$ = x[85];
-    var sp100 = x[86];
-    var sp101 = x[87];
-    var sp97 = x[88];
-    var sp98 = x[89];
-    var sp99 = x[90];
-    var sp91 = x[91];
-    var sp92 = x[92];
-    var sp82 = x[93];
-    var sp102 = x[94];
-    var sp83 = x[95];
-    var sp84 = x[96];
-    var sp73 = x[97];
-    var sp74 = x[98];
-    var Y = x[99];
-    var sp103 = x[100];
-    var sp104 = x[101];
-    var sp105 = x[102];
-    var Y$ = x[103];
-    var sp106 = x[104];
-    var sp107 = x[105];
-    var sp108 = x[106];
+    var Annihilation = x[0];
+    var Annihilation_1 = x[1];
+    var Annihilation_2 = x[2];
+    var Annihilation_3 = x[3];
+    var Annihilation_4 = x[4];
+    var Annihilation_5 = x[5];
+    var Annihilation_6 = x[6];
+    var Annihilation_7 = x[7];
+    var Annihilation_8 = x[8];
+    var Annihilation_9 = x[9];
+    var Annihilation_10 = x[10];
+    var Annihilation_11 = x[11];
+    var Annihilation_12 = x[12];
+    var Annihilation_13 = x[13];
+    var Annihilation_14 = x[14];
+    var Annihilation_15 = x[15];
+    var Catalysis = x[16];
+    var Catalysis_1 = x[17];
+    var Catalysis_2 = x[18];
+    var Catalysis_3 = x[29];
+    var Catalysis_4 = x[20];
+    var Catalysis_5 = x[21];
+    var Catalysis_6 = x[22];
+    var Catalysis_7 = x[23];
+    var Catalysis$ = x[24];
+    var Catalysis$_1 = x[25];
+    var Catalysis$_2 = x[26];
+    var Catalysis$_3 = x[27];
+    var Catalysis$_4 = x[28];
+    var Catalysis$_5 = x[29];
+    var Catalysis$_6 = x[30];
+    var Catalysis$_7 = x[31];
+    var CatalysisInv = x[32];
+    var CatalysisInv_1 = x[33];
+    var CatalysisInv$ = x[34];
+    var CatalysisInv$_1 = x[35];
+    var Degradation = x[36];
+    var Degradation_1 = x[37];
+    var Degradation$ = x[38];
+    var Degradation$_1 = x[39];
+    var L = x[40];
+    var L$ = x[41];
+    var R = x[42];
+    var sp53 = x[43];
+    var sp51 = x[44];
+    var sp52 = x[45];
+    var sp54 = x[46];
+    var sp55 = x[47];
+    var sp60 = x[48];
+    var sp56 = x[49];
+    var sp57 = x[50];
+    var sp61 = x[51];
+    var sp62 = x[52];
+    var sp65 = x[53];
+    var sp63 = x[54];
+    var sp64 = x[55];
+    var sp66 = x[56];
+    var V = x[57];
+    var sp69 = x[58];
+    var sp67 = x[59];
+    var sp68 = x[60];
+    var sp58 = x[61];
+    var sp70 = x[62];
+    var sp59 = x[63];
+    var R$ = x[64];
+    var sp75 = x[65];
+    var sp76 = x[66];
+    var sp77 = x[67];
+    var sp71 = x[68];
+    var sp72 = x[69];
+    var sp78 = x[70];
+    var sp79 = x[71];
+    var sp85 = x[72];
+    var sp86 = x[73];
+    var sp80 = x[74];
+    var sp81 = x[75];
+    var sp87 = x[76];
+    var sp88 = x[77];
+    var sp93 = x[78];
+    var sp94 = x[79];
+    var sp95 = x[80];
+    var sp89 = x[81];
+    var sp90 = x[82];
+    var sp96 = x[83];
+    var V$ = x[84];
+    var sp100 = x[85];
+    var sp101 = x[86];
+    var sp97 = x[87];
+    var sp98 = x[88];
+    var sp99 = x[89];
+    var sp91 = x[90];
+    var sp92 = x[91];
+    var sp82 = x[92];
+    var sp102 = x[93];
+    var sp83 = x[94];
+    var sp84 = x[95];
+    var sp73 = x[96];
+    var sp74 = x[97];
+    var Y = x[98];
+    var sp103 = x[99];
+    var sp104 = x[100];
+    var sp105 = x[101];
+    var Y$ = x[102];
+    var sp106 = x[103];
+    var sp107 = x[104];
+    var sp108 = x[105];
 
     // Define reaction propensities
     var r_0 = (0.2 * V);
@@ -395,11 +395,12 @@ function rightSide(t: number, x: Array<number>): Array<number> {
     var dsp106 = r_54;
     var dsp107 = r_54 - r_55;
     var dsp108 = r_55;
-    return [dAnnihilation, dAnnihilation_1, dAnnihilation_2, dAnnihilation_3, dAnnihilation_4, dAnnihilation_5, dAnnihilation_6, dAnnihilation_7, dAnnihilation_8, dAnnihilation_9, dAnnihilation_10, dAnnihilation_11, dAnnihilation_12, dAnnihilation_13, dAnnihilation_14, dAnnihilation_15, dCatalysis, dCatalysis_1, dCatalysis_2, dCatalysis_3, dCatalysis_4, dCatalysis_5, dCatalysis_6, dCatalysis_7, dCatalysis$, dCatalysis$_1, dCatalysis$_2, dCatalysis$_3, dCatalysis$_4, dCatalysis$_5, dCatalysis$_6, dCatalysis$_7, dCatalysisInv, dCatalysisInv_1, dCatalysisInv$, dCatalysisInv$_1, dDegradation, dDegradation_1, dDegradation$, dDegradation$_1, dL, dL$, dR, dsp53, dsp51, dsp52, dsp54, dsp55, dsp60, dsp56, dsp57, dsp61, dsp62, dsp65, dsp63, dsp64, dsp66, dV, dsp69, dsp67, dsp68, dsp58, dsp70, dsp59, dR$, dsp75, dsp76, dsp77, dsp71, dsp72, dsp78, dsp79, dsp85, dsp86, dsp80, dsp81, dsp87, dsp88, dsp93, dsp94, dsp95, dsp89, dsp90, dsp96, dV$, dsp100, dsp101, dsp97, dsp98, dsp99, dsp91, dsp92, dsp82, dsp102, dsp83, dsp84, dsp73, dsp74, dY, dsp103, dsp104, dsp105, dY$, dsp106, dsp107, dsp108];
+    var dx = [dAnnihilation, dAnnihilation_1, dAnnihilation_2, dAnnihilation_3, dAnnihilation_4, dAnnihilation_5, dAnnihilation_6, dAnnihilation_7, dAnnihilation_8, dAnnihilation_9, dAnnihilation_10, dAnnihilation_11, dAnnihilation_12, dAnnihilation_13, dAnnihilation_14, dAnnihilation_15, dCatalysis, dCatalysis_1, dCatalysis_2, dCatalysis_3, dCatalysis_4, dCatalysis_5, dCatalysis_6, dCatalysis_7, dCatalysis$, dCatalysis$_1, dCatalysis$_2, dCatalysis$_3, dCatalysis$_4, dCatalysis$_5, dCatalysis$_6, dCatalysis$_7, dCatalysisInv, dCatalysisInv_1, dCatalysisInv$, dCatalysisInv$_1, dDegradation, dDegradation_1, dDegradation$, dDegradation$_1, dL, dL$, dR, dsp53, dsp51, dsp52, dsp54, dsp55, dsp60, dsp56, dsp57, dsp61, dsp62, dsp65, dsp63, dsp64, dsp66, dV, dsp69, dsp67, dsp68, dsp58, dsp70, dsp59, dR$, dsp75, dsp76, dsp77, dsp71, dsp72, dsp78, dsp79, dsp85, dsp86, dsp80, dsp81, dsp87, dsp88, dsp93, dsp94, dsp95, dsp89, dsp90, dsp96, dV$, dsp100, dsp101, dsp97, dsp98, dsp99, dsp91, dsp92, dsp82, dsp102, dsp83, dsp84, dsp73, dsp74, dY, dsp103, dsp104, dsp105, dY$, dsp106, dsp107, dsp108];
+    return dx;
 }
 
-function setArray() {
-    var n = 5000;
+function setArray_() {
+    var n = 2000;
     var t = new Array(n);
     var x0 = new Array(n);
     var x1 = new Array(n);
@@ -414,15 +415,18 @@ function setArray() {
     vec.delete();
         
     var timeStart = Date.now();
-    for (var i = 1; i < n; i++) {
+    var i = 0;
+    var time;
+    do {
         var s = solver.Solve();
-        t[i] = s.Time();
-        x0[i] = s.Solve().GetElement(43) - s.Solve().GetElement(65);
-        x1[i] = s.Solve().GetElement(58) - s.Solve().GetElement(85);
-        x2[i] = s.Solve().GetElement(99) - s.Solve().GetElement(103);
-        x3[i] = s.Solve().GetElement(41) - s.Solve().GetElement(42);
+        i++;
+        time = t[i] = s.Time();
+        x0[i] = s.Solve().GetElement(42) - s.Solve().GetElement(64);
+        x1[i] = s.Solve().GetElement(57) - s.Solve().GetElement(84);
+        x2[i] = s.Solve().GetElement(98) - s.Solve().GetElement(102);
+        x3[i] = s.Solve().GetElement(40) - s.Solve().GetElement(41);
         s.delete();
-    }			
+    } while (time < 140000)			
     solver.delete();
     var timeEnd = Date.now();
     console.log(timeEnd - timeStart);
@@ -432,6 +436,148 @@ function setArray() {
     InteractiveDataDisplay.asPlot('chart').polyline("p3", { x: t, y: x3, stroke: 'Purple', thickness: 2 });
 }
 
+function setArray() {
+    var n = 2000;
+    var t = new Array();
+    var x0 = new Array();
+    var x1 = new Array();
+    var x2 = new Array();
+    var x3 = new Array();
+   
+    var vec = initVector();
+    
+    var opts = new Module.Options();
+    t[0] = 0.0; x0[0] = 4.0, x1[0] = 0.0; x2[0] = 0.0, x3[0] = 0.0;
+    var solver = new Module.Gear(0.0, vec, ASMWrapper(rightSide, 12),  opts);
+    vec.delete();
+        
+    var timeStart = Date.now();
+    var i = 0;
+    var time;
+    do {
+        var s = solver.Solve();
+        i++;
+        time = t[i] = s.Time();
+        x0[i] = s.Solve().GetElement(2) - s.Solve().GetElement(3);
+        x1[i] = s.Solve().GetElement(4) - s.Solve().GetElement(5);
+        x2[i] = s.Solve().GetElement(6) - s.Solve().GetElement(7);
+        x3[i] = s.Solve().GetElement(0) - s.Solve().GetElement(1);
+        s.delete();
+    } while (time < 150000)			
+    solver.delete();
+    var timeEnd = Date.now();
+    console.log(timeEnd - timeStart);
+    InteractiveDataDisplay.asPlot('chart').polyline("p0", { x: t, y: x0, stroke: 'Green', thickness: 2 });
+    InteractiveDataDisplay.asPlot('chart').polyline("p1", { x: t, y: x1, stroke: 'Red', thickness: 2 });
+    InteractiveDataDisplay.asPlot('chart').polyline("p2", { x: t, y: x2, stroke: 'Blue', thickness: 2 });
+    InteractiveDataDisplay.asPlot('chart').polyline("p3", { x: t, y: x3, stroke: 'Purple', thickness: 2 });
+}
+
+function initVector(): Module.Vector {
+
+    var x0 = new Module.Vector(12);
+    x0.SetElement(2, 4); // R
+    return x0;
+}
+
+
+// Write out the parameters
+function rightSide(t: number, x: Array<number>): Array<number> {
+    var p: any = {};
+    p.deg = 0.0008;
+    p.cat = 0.0008;
+    p.pol = 0.0167;
+    p.nick = 0.0167;
+    p.x0 = 4;
+    p.ann = 0.01;
+    p.bind = 5.4e-06;
+    p.bind2 = 0.001;
+    p.bind1 = 5e-05;
+    p.unbind = 0.1126;
+    p.Cmax = 1000;
+    p.c = 0.0008;
+    p.kt = 0.001;
+    p.ku = 0.001;
+    p.s = 2;
+    p.e = 2.71828183;
+    p.R = 0.0019872;
+    p.T = 298.15;
+    var deg = p.deg;
+    var cat = p.cat;
+    var pol = p.pol;
+    var nick = p.nick;
+    var x0 = p.x0;
+    var ann = p.ann;
+    var bind = p.bind;
+    var bind2 = p.bind2;
+    var bind1 = p.bind1;
+    var unbind = p.unbind;
+    var Cmax = p.Cmax;
+    var c = p.c;
+    var kt = p.kt;
+    var ku = p.ku;
+    var s = p.s;
+    var e = p.e;
+    var T = p.T;
+
+    // Assign states
+    var L = x[0];
+    var L$ = x[1];
+    var R = x[2];
+    var R$ = x[3];
+    var V = x[4];
+    var V$ = x[5];
+    var Y = x[6];
+    var Y$ = x[7];
+    var sp9 = x[8];
+    var sp10 = x[9];
+    var sp11 = x[10];
+    var sp12 = x[11];
+
+    // Define reaction propensities
+    var r_0 = (cat * R);
+    var r_1 = (cat * R$);
+    var r_2 = (cat * Y);
+    var r_3 = (cat * Y$);
+    var r_4 = (deg * sp9);
+    var r_5 = (deg * sp10);
+    var r_6 = (cat * sp9);
+    var r_7 = (cat * sp10);
+    var r_8 = (cat * sp9);
+    var r_9 = (cat * sp10);
+    var r_10 = (cat * sp11);
+    var r_11 = (cat * sp12);
+    var r_12 = (deg * V);
+    var r_13 = (deg * V$);
+    var r_14 = ((ann * sp12) * sp11);
+    var r_15 = (0.2 * V);
+    var r_16 = (0.2 * V$);
+    var r_17 = (0.1 * Y);
+    var r_18 = (0.1 * Y$);
+    var r_19 = ((0.1 * Y) * Y$);
+    var r_20 = ((0.01 * Y) * L);
+    var r_21 = ((0.01 * Y$) * L$);
+    var r_22 = (L$ * L);
+    var r_23 = ((ann * R$) * R);
+    var r_24 = ((ann * V$) * V);
+    var r_25 = ((ann * sp10) * sp9);
+
+    // Assign derivatives
+    var dL = -r_22;
+    var dL$ = -r_22;
+    var dR = -r_23;
+    var dR$ = -r_23;
+    var dV = r_8 + r_10 - r_12 - r_24;
+    var dV$ = r_9 + r_11 - r_13 - r_24;
+    var dY = r_15 - r_17 - r_19 - r_20;
+    var dY$ = r_16 - r_18 - r_19 - r_21;
+    var dsp9 = r_0 + r_3 - r_4 - r_25;
+    var dsp10 = r_1 + r_2 - r_5 - r_25;
+    var dsp11 = r_6 - r_14;
+    var dsp12 = r_7 - r_14;
+
+    return [dL, dL$, dR, dR$, dV, dV$, dY, dY$, dsp9, dsp10, dsp11, dsp12]; 
+}
 
 $(document).ready(function() {			
     var chart = InteractiveDataDisplay.asPlot('chart');
