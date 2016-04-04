@@ -19,6 +19,7 @@
   "dependencies": {
     "requirejs": "^2.1.22",
     "jquery": "^2.1.4",
-    "IDD": "https://github.com/predictionmachines/InteractiveDataDisplay.git#1.0.5"
+    "knockout": "~3.4.0",
+    "idd": "~1.1.4"
   }
 }

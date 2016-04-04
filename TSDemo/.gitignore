@@ -1,4 +1,4 @@
-Build/
+dist/
 Scripts/**/*.js
 Scripts/**/*.js.map
 bower_components/
@@ -9,3 +9,4 @@ lib/
 **/*.d.ts
 .vscode
 tsconfig.json
+Scripts/.baseDir.ts

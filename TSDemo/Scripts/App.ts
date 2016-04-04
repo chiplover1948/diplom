@@ -1,24 +1,19 @@
 /// <reference path="../typings/requirejs/require.d.ts" />
-/// <reference path="../typings/emscripten/emscripten.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="./solver.d.ts" />
 /// <reference path="./idd.d.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
+/// <amd-dependency path="./Build/idd-ko.js"/>
+/// <reference path="../typings/rx/rx.d.ts" />
 
 import $ = require("jquery");
-import Module = require("solver");
+import ko = require("knockout");
 import InteractiveDataDisplay = require("idd");
+import Normal = require("./NormalDistribution");
+import Solver = require("./Solver");
+import idd = require("idd");
 
-function ASMWrapper(Right: (t: number, v: Array<number>) => Array<number>, n: number) {
-    return Module.Runtime.addFunction((t, x, r) => {
-				var right = new Array<number>(n);
-				for (var i = 0; i < n; i++) {
-					right[i] = Module.getValue(x + i * 8, 'double');
-				}
-			    var dx = Right(t, right);
-				Module.HEAPF64.set(new Float64Array(dx), r/8);
-			});
-}
 
+/*
 function initVector_(): Module.Vector {
     var p: any = {};
     p.deg = 0.0008;
@@ -435,151 +430,90 @@ function setArray_() {
     InteractiveDataDisplay.asPlot('chart').polyline("p2", { x: t, y: x2, stroke: 'Blue', thickness: 2 });
     InteractiveDataDisplay.asPlot('chart').polyline("p3", { x: t, y: x3, stroke: 'Purple', thickness: 2 });
 }
+*/
 
-function setArray() {
-    var n = 2000;
-    var t = new Array();
-    var x0 = new Array();
-    var x1 = new Array();
-    var x2 = new Array();
-    var x3 = new Array();
-   
-    var vec = initVector();
-    
-    var opts = new Module.Options();
-    t[0] = 0.0; x0[0] = 4.0, x1[0] = 0.0; x2[0] = 0.0, x3[0] = 0.0;
-    var solver = new Module.Gear(0.0, vec, ASMWrapper(rightSide, 12),  opts);
-    vec.delete();
-        
-    var timeStart = Date.now();
-    var i = 0;
-    var time;
-    do {
-        var s = solver.Solve();
-        i++;
-        time = t[i] = s.Time();
-        x0[i] = s.Solve().GetElement(2) - s.Solve().GetElement(3);
-        x1[i] = s.Solve().GetElement(4) - s.Solve().GetElement(5);
-        x2[i] = s.Solve().GetElement(6) - s.Solve().GetElement(7);
-        x3[i] = s.Solve().GetElement(0) - s.Solve().GetElement(1);
-        s.delete();
-    } while (time < 150000)			
-    solver.delete();
-    var timeEnd = Date.now();
-    console.log(timeEnd - timeStart);
-    InteractiveDataDisplay.asPlot('chart').polyline("p0", { x: t, y: x0, stroke: 'Green', thickness: 2 });
-    InteractiveDataDisplay.asPlot('chart').polyline("p1", { x: t, y: x1, stroke: 'Red', thickness: 2 });
-    InteractiveDataDisplay.asPlot('chart').polyline("p2", { x: t, y: x2, stroke: 'Blue', thickness: 2 });
-    InteractiveDataDisplay.asPlot('chart').polyline("p3", { x: t, y: x3, stroke: 'Purple', thickness: 2 });
-}
+function initVector(): Array<number> {
 
-function initVector(): Module.Vector {
-
-    var x0 = new Module.Vector(12);
-    x0.SetElement(2, 4); // R
+    var x0 = new Array<number>(12);
+    for (var i = 0; i < 12; i++) x0[i] = 0;
+    x0[2] = 4; // R
     return x0;
 }
 
 
-// Write out the parameters
-function rightSide(t: number, x: Array<number>): Array<number> {
-    var p: any = {};
-    p.deg = 0.0008;
-    p.cat = 0.0008;
-    p.pol = 0.0167;
-    p.nick = 0.0167;
-    p.x0 = 4;
-    p.ann = 0.01;
-    p.bind = 5.4e-06;
-    p.bind2 = 0.001;
-    p.bind1 = 5e-05;
-    p.unbind = 0.1126;
-    p.Cmax = 1000;
-    p.c = 0.0008;
-    p.kt = 0.001;
-    p.ku = 0.001;
-    p.s = 2;
-    p.e = 2.71828183;
-    p.R = 0.0019872;
-    p.T = 298.15;
-    var deg = p.deg;
-    var cat = p.cat;
-    var pol = p.pol;
-    var nick = p.nick;
-    var x0 = p.x0;
-    var ann = p.ann;
-    var bind = p.bind;
-    var bind2 = p.bind2;
-    var bind1 = p.bind1;
-    var unbind = p.unbind;
-    var Cmax = p.Cmax;
-    var c = p.c;
-    var kt = p.kt;
-    var ku = p.ku;
-    var s = p.s;
-    var e = p.e;
-    var T = p.T;
+/**
+ * ViewModel
+ */
+interface ISolve {
+    t: KnockoutObservableArray<number>;
+    x: Array<number>;
+    name: string;
+}
 
-    // Assign states
-    var L = x[0];
-    var L$ = x[1];
-    var R = x[2];
-    var R$ = x[3];
-    var V = x[4];
-    var V$ = x[5];
-    var Y = x[6];
-    var Y$ = x[7];
-    var sp9 = x[8];
-    var sp10 = x[9];
-    var sp11 = x[10];
-    var sp12 = x[11];
-
-    // Define reaction propensities
-    var r_0 = (cat * R);
-    var r_1 = (cat * R$);
-    var r_2 = (cat * Y);
-    var r_3 = (cat * Y$);
-    var r_4 = (deg * sp9);
-    var r_5 = (deg * sp10);
-    var r_6 = (cat * sp9);
-    var r_7 = (cat * sp10);
-    var r_8 = (cat * sp9);
-    var r_9 = (cat * sp10);
-    var r_10 = (cat * sp11);
-    var r_11 = (cat * sp12);
-    var r_12 = (deg * V);
-    var r_13 = (deg * V$);
-    var r_14 = ((ann * sp12) * sp11);
-    var r_15 = (0.2 * V);
-    var r_16 = (0.2 * V$);
-    var r_17 = (0.1 * Y);
-    var r_18 = (0.1 * Y$);
-    var r_19 = ((0.1 * Y) * Y$);
-    var r_20 = ((0.01 * Y) * L);
-    var r_21 = ((0.01 * Y$) * L$);
-    var r_22 = (L$ * L);
-    var r_23 = ((ann * R$) * R);
-    var r_24 = ((ann * V$) * V);
-    var r_25 = ((ann * sp10) * sp9);
-
-    // Assign derivatives
-    var dL = -r_22;
-    var dL$ = -r_22;
-    var dR = -r_23;
-    var dR$ = -r_23;
-    var dV = r_8 + r_10 - r_12 - r_24;
-    var dV$ = r_9 + r_11 - r_13 - r_24;
-    var dY = r_15 - r_17 - r_19 - r_20;
-    var dY$ = r_16 - r_18 - r_19 - r_21;
-    var dsp9 = r_0 + r_3 - r_4 - r_25;
-    var dsp10 = r_1 + r_2 - r_5 - r_25;
-    var dsp11 = r_6 - r_14;
-    var dsp12 = r_7 - r_14;
-
-    return [dL, dL$, dR, dR$, dV, dV$, dY, dY$, dsp9, dsp10, dsp11, dsp12]; 
+class ViewModel {
+    worker: Worker;
+    solves: KnockoutObservableArray<ISolve> = ko.observableArray([]);
+    private t: KnockoutObservableArray<number> = ko.observableArray([]);
+    
+    constructor() {
+        this.worker = new Worker("./Build/odeWorker.js");
+        
+        var observable = Rx.Observable.create((obs) => {
+            
+            this.worker.onmessage = (ev: MessageEvent) => {
+                obs.onNext(ev.data);
+            }
+            
+            return _ => this.worker.terminate();
+        })
+        
+        
+        observable.subscribe((s) => {
+            if (typeof s == 'string') {
+                this.worker.terminate();
+            } else {
+                var data = <Solver.ISolution>s;              
+                if (this.solves().length == 0) 
+                    data.solve.vector.forEach((val, i) => {
+                        this.solves.push({t: this.t, x: [val], name: i.toString()})
+                    });
+                else 
+                    for (var i = 0; i < 12; i++) {
+                        this.solves()[i].x.push(data.solve.vector[i]);
+                    }
+                this.t.push(data.time);                  
+            }            
+        })
+        
+        
+        var message: Solver.IWorkerMessage = {
+            x0: {vector: initVector(), size: 12},
+            t0: 0,
+            options: {},
+            tFinal: 40000,
+            rightSide: "./rightSide.js"
+        }
+        this.worker.postMessage(JSON.stringify(message));
+        ko.applyBindings(this);
+    }
 }
 
 $(document).ready(function() {			
-    var chart = InteractiveDataDisplay.asPlot('chart');
-    setArray();
+    //var chart = InteractiveDataDisplay.asPlot('chart');
+    //setArray();
+    /*var timeStart = performance.now();
+    var arr = Normal.Normal(40000);
+    var timeEnd = performance.now();
+    console.log("Generation takes " + (timeEnd - timeStart).toString() + " ms");
+    var ctx = (<HTMLCanvasElement>document.getElementById("canvas")).getContext("2d");
+    var width = ctx.canvas.width;
+    ctx.translate(width / 2, width / 2);
+    ctx.scale(width / 2, width / 2);
+    arr.forEach((val) => {
+        ctx.fillRect(val[0], val[1], 2 / width, 2 / width);
+    })*/
+    
+    new ViewModel();
+    idd.asPlot($("div[data-idd-plot='chart']")); 
 });
+

@@ -6,13 +6,22 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "jquery/jquery.d.ts": {
-      "commit": "12f9b621f914fe2b9486a74e0f2e130621837bfc"
+      "commit": "f3d6a0dacaba0443d0e3345866e0a83320b8c99b"
     },
     "requirejs/require.d.ts": {
-      "commit": "12f9b621f914fe2b9486a74e0f2e130621837bfc"
+      "commit": "f3d6a0dacaba0443d0e3345866e0a83320b8c99b"
     },
     "emscripten/emscripten.d.ts": {
-      "commit": "12f9b621f914fe2b9486a74e0f2e130621837bfc"
+      "commit": "f3d6a0dacaba0443d0e3345866e0a83320b8c99b"
+    },
+    "knockout/knockout.d.ts": {
+      "commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
+    },
+    "rx/rx.d.ts": {
+      "commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
+    },
+    "rx/rx-lite.d.ts": {
+      "commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
     }
   }
 }

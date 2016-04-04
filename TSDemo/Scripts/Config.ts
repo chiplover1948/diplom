@@ -6,8 +6,9 @@ require.config({
         'solver': '../lib/solver/js-solver',
         'idd': '../lib/IDD/idd',
         'jquery': '../lib/jquery/jquery',
-        'modernizer': "https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min",        
-        "rx": "https://cdnjs.cloudflare.com/ajax/libs/rxjs/3.1.2/rx.lite.min",
+        'modernizer': "../lib/modernizr/modernizr",        
+        "rx": "../lib/rxjs/rx.all",
+        "knockout": "../lib/knockout/knockout"
     },
     shim: {
         'solver': {

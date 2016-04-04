@@ -10,7 +10,10 @@ module.exports = function(grunt) {
             dist: {
                 files: [
                     {src: 'index.html', dest: 'dist/index.html'},
-					{cwd: 'Styles', src: '*.css', dest: 'dist/Styles', expand: true}
+					{cwd: 'Styles', src: '*.css', dest: 'dist/Styles', expand: true},
+                    {src: 'Scripts/odeWorker.js', dest: 'dist/Build/odeWorker.js'},                    
+                    {src: 'Scripts/rightSide.js', dest: 'dist/Build/rightSide.js'},                    
+                    {src: 'Scripts/idd-ko.js', dest: 'dist/Build/idd-ko.js'}
                 ]
             }
         },

@@ -1,7 +1,9 @@
+/// <reference path="../typings/emscripten/emscripten.d.ts" />
 declare module Module {
     interface Vector {
         SetElement(i: number, val: number): number;
         GetElement(i: number): number;
+        Length(): number;
         Print(): void;
         delete();
     }
