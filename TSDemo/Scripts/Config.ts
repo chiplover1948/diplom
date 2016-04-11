@@ -1,7 +1,6 @@
 /// <reference path="../typings/requirejs/require.d.ts" />
 
 require.config({
-    baseUrl: './Build',
     paths: {
         'solver': '../lib/solver/js-solver',
         'idd': '../lib/IDD/idd',

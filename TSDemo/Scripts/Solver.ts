@@ -1,14 +1,15 @@
-/// <reference path="./solver.d.ts" />
-/// <reference path="../typings/rx/rx.d.ts" />
+/// <reference path="./PrecompiledScripts/solver.d.ts" />
+
+export interface IWorkerResult {
+    Time: ArrayBuffer;
+    Solves: Array<ArrayBuffer>;
+}
 
 export interface IOptions {
     
 }
 
-export interface IVector {
-    vector: Array<number>;
-    size: number;
-}
+export type IVector = Array<number>
 
 export interface ISolution {
     time: number;
@@ -43,24 +44,26 @@ function convertFunc(Right: IRightSide, n: number) {
 }
 
 function convertVector(vec: IVector): Module.Vector {
-    var res = new Module.Vector(vec.size);
-    vec.vector.forEach((val, i) => {res.SetElement(i, val)});
+    var res = new Module.Vector(vec.length);
+    vec.forEach((val, i) => {res.SetElement(i, val)});
     return res;
 }
 
 function convertVectorBack(vec: Module.Vector): IVector {
-    var res: IVector = {vector: new Array<number>(), size: 12};
+    var res: IVector = new Array<number>();
     for(var i = 0; i < 12; i++)
-        res.vector[i] = vec.GetElement(i);
+        res[i] = vec.GetElement(i);
     return res;
 }
 
 
 export class GearSolver {
-    solver: Module.Gear;
+    private solver: Module.Gear;
+    private pointer;
     
     constructor(t0: number, x0: IVector, f: IRightSide, opts: IOptions) {
-        this.solver = new Module.Gear(t0, convertVector(x0), convertFunc(f, x0.size), convertOpts(opts));      
+        this.pointer = convertFunc(f, x0.length);
+        this.solver = new Module.Gear(t0, convertVector(x0), this.pointer, convertOpts(opts));      
     }
     
     Solve(): ISolution {
@@ -72,5 +75,6 @@ export class GearSolver {
     
     dispose() {
         this.solver.delete();
+        Module.Runtime.removeFunction(this.pointer);
     }
 }

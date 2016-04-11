@@ -1,7 +1,10 @@
-export function Normal(n: number): Array<Array<number>> {
-    var res = new Array<Array<number>>();
-    for (var i = 0; i < n; i++) {
-        res.push(NormalPair());
+export function Normal(n: number, m: number, s: number): Array<number> {
+    var res = new Array<number>();
+    var i = 0;
+    while (i < n) {
+        var rand = NormalPair().map(val => m + s * val);
+        
+        i = res.push(rand[0], rand[1]);
     }
     return res;
 }

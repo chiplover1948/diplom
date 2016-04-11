@@ -1,9 +1,8 @@
 /// <reference path="../typings/requirejs/require.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="./idd.d.ts" />
+/// <reference path="PrecompiledScripts/idd.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
-/// <amd-dependency path="./Build/idd-ko.js"/>
-/// <reference path="../typings/rx/rx.d.ts" />
+/// <amd-dependency path="Build/PrecompiledScripts/idd-ko.js"/>
 
 import $ = require("jquery");
 import ko = require("knockout");
@@ -445,55 +444,40 @@ function initVector(): Array<number> {
  * ViewModel
  */
 interface ISolve {
-    t: KnockoutObservableArray<number>;
-    x: Array<number>;
+    t: Array<number>|Float64Array;
+    x: Array<number>|Float64Array;
     name: string;
 }
 
 class ViewModel {
-    worker: Worker;
     solves: KnockoutObservableArray<ISolve> = ko.observableArray([]);
     private t: KnockoutObservableArray<number> = ko.observableArray([]);
     
     constructor() {
-        this.worker = new Worker("./Build/odeWorker.js");
+        var worker = new Worker("./Build/Workers/bootWorker.js");
         
-        var observable = Rx.Observable.create((obs) => {
+        worker.onmessage = (ev: MessageEvent) => {
+            var data = <Solver.IWorkerResult>ev.data;
             
-            this.worker.onmessage = (ev: MessageEvent) => {
-                obs.onNext(ev.data);
-            }
-            
-            return _ => this.worker.terminate();
-        })
-        
-        
-        observable.subscribe((s) => {
-            if (typeof s == 'string') {
-                this.worker.terminate();
-            } else {
-                var data = <Solver.ISolution>s;              
-                if (this.solves().length == 0) 
-                    data.solve.vector.forEach((val, i) => {
-                        this.solves.push({t: this.t, x: [val], name: i.toString()})
-                    });
-                else 
-                    for (var i = 0; i < 12; i++) {
-                        this.solves()[i].x.push(data.solve.vector[i]);
-                    }
-                this.t.push(data.time);                  
-            }            
-        })
-        
+            var Time = new Float64Array(data.Time);
+            var Solves = new Array<Float64Array>(12);
+            for (var i = 0; i < 12; i++)
+                Solves[i] = new Float64Array(data.Solves[i]);
+            this.solves.push({
+                t: Time,
+                x: Solves[6],
+                name: ""
+            });
+        }
         
         var message: Solver.IWorkerMessage = {
-            x0: {vector: initVector(), size: 12},
+            x0: initVector(),
             t0: 0,
             options: {},
-            tFinal: 40000,
-            rightSide: "./rightSide.js"
+            tFinal: 35000,
+            rightSide: "rightSide.js"
         }
-        this.worker.postMessage(JSON.stringify(message));
+        worker.postMessage(JSON.stringify(message));
         ko.applyBindings(this);
     }
 }
