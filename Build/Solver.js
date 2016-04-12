@@ -2,8 +2,6 @@ define(["require", "exports"], function (require, exports) {
     function convertOpts(opts) {
         var Opts = new Module.Options();
         Opts.OutputStep = opts.OutputStep;
-        Opts.AbsoluteTolerance = 1e-8;
-        Opts.RelativeTolerance = 1e-6;
         return Opts;
     }
     function convertFunc(Right, n) {

@@ -16,7 +16,14 @@
     </div>
     <div data-idd-plot="chart" style="height:95%; width:100%;">
         <div data-idd-plot="plot" data-bind="foreach: solves">
-            
+            <div data-idd-plot="polyline"             
+                data-bind="
+                    iddX: t,
+                    iddY: middle,
+                    iddStroke: color,
+                    attr: { 'data-idd-name': name }
+                ">
+            </div>
             <div
                 data-idd-plot="area"             
                 data-bind="

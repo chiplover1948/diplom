@@ -31,11 +31,17 @@ define(["require", "exports", "jquery", "knockout", "idd", "tinycolor2", "Build/
             });
             this.middle = ko.pureComputed(function () {
                 var arr = new Array();
-                if (_this.upper.length == 0)
+                if (_this.t.length == 0)
                     return arr;
                 for (var i = 0; i < _this.t.length; i++) {
-                    arr.push((_this.upper[i] - _this.Lower()[i]) / 2);
+                    var tmp = new Array();
+                    for (var j = 0; j < _this.x().length; j++) {
+                        tmp.push(_this.x()[j][i]);
+                    }
+                    tmp.sort();
+                    arr.push(tmp[Math.floor(tmp.length / 2)]);
                 }
+                return arr;
             });
             this.name = "species";
             this.CIColor = ko.computed(function () {
@@ -49,9 +55,9 @@ define(["require", "exports", "jquery", "knockout", "idd", "tinycolor2", "Build/
     var ViewModel = (function () {
         function ViewModel() {
             this.solves = ko.observableArray([]);
-            this.sigma = ko.observable(0.1);
+            this.sigma = ko.observable(0.2);
             this.count = ko.observable(50);
-            this.step = ko.observable(100);
+            this.step = ko.observable(200);
             this.t = ko.observableArray([]);
             ko.applyBindings(this);
         }
@@ -66,13 +72,13 @@ define(["require", "exports", "jquery", "knockout", "idd", "tinycolor2", "Build/
             var solve3 = new Solve();
             var solve4 = new Solve();
             solve1.color('green');
-            solve1.name = "L";
+            solve1.name = "L - L'";
             solve2.color('red');
-            solve2.name = "R";
+            solve2.name = "R - R'";
             solve3.color('blue');
-            solve3.name = "V";
+            solve3.name = "V - V'";
             solve4.color('grey');
-            solve4.name = "Y";
+            solve4.name = "Y - Y'";
             this.worker.onmessage = function (ev) {
                 var data = ev.data;
                 var Time = new Float64Array(data.Time);
@@ -92,7 +98,7 @@ define(["require", "exports", "jquery", "knockout", "idd", "tinycolor2", "Build/
                 x0: initVector(),
                 t0: 0,
                 options: { OutputStep: typeof this.step() == 'string' ? parseFloat(this.step()) : this.step() },
-                tFinal: 20000,
+                tFinal: 40000,
                 rightSide: "rightSide.js",
                 sigma: typeof this.sigma() == 'string' ? parseFloat(this.sigma()) : this.sigma(),
                 count: typeof this.count() == 'string' ? parseFloat(this.count()) : this.count()
