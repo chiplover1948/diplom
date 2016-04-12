@@ -14,13 +14,21 @@ class Gear
 {
 public:
     Gear(double, Vector&, RightSide *, Options &);
+    ~Gear() {
+        if (opts.OutputStep > 0) {
+            delete xout;
+            delete resX;
+        }
+    }
     SolPoint Solve();
-    int fails;
 private:
     RightSide *rightSide;
     Options opts;
     NordsieckState currstate;
     int n;
+    Vector *xout;
+    Vector *resX;
+    double tout, resT, tlast;
     
     Vector f(double, Vector &);
     void Corrector(bool &);

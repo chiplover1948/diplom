@@ -7,7 +7,8 @@ require.config({
         'jquery': '../lib/jquery/jquery',
         'modernizer': "../lib/modernizr/modernizr",        
         "rx": "../lib/rxjs/rx.all",
-        "knockout": "../lib/knockout/knockout"
+        "knockout": "../lib/knockout/knockout",
+        "tinycolor2": "../lib/tinycolor/tinycolor"
     },
     shim: {
         'solver': {

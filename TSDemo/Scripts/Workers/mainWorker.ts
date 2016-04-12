@@ -4,23 +4,22 @@ import {Normal} from '../NormalDistribution'
 declare var rightSide;
 
 export = (ev: MessageEvent) => {
-    var dataSize = 50;
     var message = <Solver.IWorkerMessage>JSON.parse(ev.data);
-    var initials = Normal(50, 4, 0.2);
+    var initials = Normal(message.count, 4, message.sigma);
     
     var currInitial = 0;
     
     var Result: Solver.IWorkerResult;
     
     
-    var time = new Array<number>();
-    var solves = new Array<Array<number>>(12);
-    for (var i = 0; i < 12; i++) {
-        solves[i] = new Array<number>();        
-    }
     
     importScripts("../PrecompiledScripts/" + message.rightSide);
     initials.forEach((val) => {
+        var time = new Array<number>();
+        var solves = new Array<Array<number>>(12);
+        for (var i = 0; i < 12; i++) {
+            solves[i] = new Array<number>();        
+        }
         message.x0[2] = val;
         var gear = new Solver.GearSolver(message.t0, message.x0, rightSide, message.options);
         var s = {solve: message.x0, time: message.t0};

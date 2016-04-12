@@ -6,7 +6,7 @@ export interface IWorkerResult {
 }
 
 export interface IOptions {
-    
+    OutputStep: number;
 }
 
 export type IVector = Array<number>
@@ -22,6 +22,8 @@ export interface IWorkerMessage {
     x0: IVector;
     t0: number;
     tFinal: number;
+    sigma: number;
+    count: number;
 }
 
 export interface IRightSide {
@@ -29,7 +31,11 @@ export interface IRightSide {
 }
 
 function convertOpts(opts: IOptions): Module.Options {
-    return new Module.Options();
+    var Opts = new Module.Options();
+    Opts.OutputStep = opts.OutputStep;
+    Opts.AbsoluteTolerance = 1e-8;
+    Opts.RelativeTolerance = 1e-6;
+    return Opts;
 }
 
 function convertFunc(Right: IRightSide, n: number) {

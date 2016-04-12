@@ -22,6 +22,9 @@
     },
     "rx/rx-lite.d.ts": {
       "commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
+    },
+    "tinycolor/tinycolor.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
     }
   }
 }

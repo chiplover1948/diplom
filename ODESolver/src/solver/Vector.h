@@ -26,7 +26,7 @@ public:
 	int Dimension() const { return n; }
 	friend std::ostream& operator<<(std::ostream& os, const Vector& obj);
 
-	static Vector *Lerp(double t, double t0, Vector &v0, double t1, Vector &v1);
+	static Vector Lerp(double t, double t0, Vector &v0, double t1, Vector &v1);
 
 	double *GetArray() const { return a; }
 	void Print() {std::cout<<*this;}

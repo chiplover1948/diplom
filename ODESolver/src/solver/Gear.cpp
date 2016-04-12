@@ -1,16 +1,23 @@
 #include "Gear.h"
+#include <iostream>
 
 using namespace std;
 
 Gear::Gear(double t0, Vector &x0, RightSide *rightSide, Options &opts)
 {
-	fails = 0;
     this->rightSide = rightSide;
     this->opts = opts;
     this->n = x0.Dimension();
     
     double dt;
     //Vector x = Vector(x0);
+    if (opts.OutputStep > 0.0) {
+        tout = t0 + opts.OutputStep;
+        xout = new Vector(x0);
+        resX = new Vector(x0);
+        resT = t0;
+        tlast = t0;
+    }
     
     Vector dx = f(t0, x0);
     if (opts.InitialStep != 0)
@@ -65,8 +72,14 @@ Gear::Gear(double t0, Vector &x0, RightSide *rightSide, Options &opts)
 }
 
 SolPoint Gear::Solve()
-{
-    SolPoint *result;
+{    
+    if (opts.OutputStep > 0.0 && tout < resT) {
+        double toutLerp = tout;
+        tout += opts.OutputStep;
+        return SolPoint(toutLerp, Vector::Lerp(toutLerp, tlast, *xout, resT, *resX));
+    }
+    
+    
     bool isIterationFailed = false;
 
     // Predictor step
@@ -77,7 +90,6 @@ SolPoint Gear::Solve()
         Corrector(isIterationFailed);
         if (isIterationFailed) // If iterations are not finished - bad convergence
         {
-        	fails++;
             currstate.nsuccess = 0;
             currstate.dt = currstate.dt / 2.0;
             if (currstate.dt < currstate.epsilon || currstate.dt < opts.MinStep) 
@@ -88,10 +100,10 @@ SolPoint Gear::Solve()
         }
         else // Iterations finished
         {
+            *resX = *currstate.xn;
+            resT = currstate.tn;
+            
             double r = min(1.1, max(0.2, currstate.rFactor));
-
-            result = new SolPoint(currstate.tn + currstate.dt, *currstate.xn);
-
             currstate.tn = currstate.tn + currstate.dt;
 
             if (opts.MaxStep < DBL_MAX)
@@ -114,9 +126,24 @@ SolPoint Gear::Solve()
             DELETE(tmp);
         }
     } while (isIterationFailed);
-    SolPoint sol = *result;
-    delete result;
-    return sol;
+    
+    if (opts.OutputStep > 0.0) 
+    {
+        if (resT <= tout) {
+            *xout = *resX;
+            tlast = resT;
+            return Solve();
+        }
+        else {
+            double toutLerp = tout;
+            tout += opts.OutputStep;
+            return SolPoint(toutLerp, Vector::Lerp(toutLerp, tlast, *xout, resT, *resX));
+        }
+    } 
+    else 
+    {
+        return SolPoint(resT, *resX);
+    }
 }
 
 void Gear::Predictor() 

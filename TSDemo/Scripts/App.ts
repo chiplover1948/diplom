@@ -2,6 +2,7 @@
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="PrecompiledScripts/idd.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="../typings/tinycolor/tinycolor.d.ts" />
 /// <amd-dependency path="Build/PrecompiledScripts/idd-ko.js"/>
 
 import $ = require("jquery");
@@ -10,6 +11,7 @@ import InteractiveDataDisplay = require("idd");
 import Normal = require("./NormalDistribution");
 import Solver = require("./Solver");
 import idd = require("idd");
+import tinycolor = require("tinycolor2");
 
 
 /*
@@ -439,45 +441,100 @@ function initVector(): Array<number> {
     return x0;
 }
 
-
-/**
- * ViewModel
- */
-interface ISolve {
-    t: Array<number>|Float64Array;
-    x: Array<number>|Float64Array;
-    name: string;
+class Solve {
+    t: Float64Array = new Float64Array(0);
+    x: KnockoutObservableArray<Float64Array> = ko.observableArray([]);
+    color: KnockoutObservable<string> = ko.observable("");
+    private upper: Array<number> = new Array<number>();
+    private lower: Array<number> = new Array<number>();
+    
+    Lower = ko.pureComputed(() => {
+        if (this.lower.length == 0) {
+            for (var i = 0; i < this.t.length; i++) {
+                this.lower.push(this.x()[0][i]);
+                this.upper.push(this.x()[0][i])
+            }
+        } else {
+            for (var i = 0; i < this.t.length; i++) {
+                this.lower[i] = Math.min(this.lower[i], this.x()[this.x().length - 1][i]);
+                this.upper[i] = Math.max(this.upper[i], this.x()[this.x().length - 1][i]);
+            }
+        }
+        return this.lower;
+    })
+    
+    middle = ko.pureComputed(() => {
+        var arr = new Array<number>();
+        if (this.upper.length == 0) return arr;
+        for (var i = 0; i < this.t.length; i++) {
+            arr.push((this.upper[i] - this.Lower()[i]) / 2);
+        }
+    })
+    
+    name: string = "species";
+    
+    CIColor = ko.computed(() => {
+        var c = tinycolor(this.color());
+        c.setAlpha(0.2);                        
+        return c.toRgbString();
+    });
 }
 
 class ViewModel {
-    solves: KnockoutObservableArray<ISolve> = ko.observableArray([]);
+    solves: KnockoutObservableArray<Solve> = ko.observableArray([]);
+    sigma: KnockoutObservable<number> = ko.observable(0.1);
+    count: KnockoutObservable<number> = ko.observable(50);
+    step: KnockoutObservable<number> = ko.observable(100);
     private t: KnockoutObservableArray<number> = ko.observableArray([]);
-    
-    constructor() {
-        var worker = new Worker("./Build/Workers/bootWorker.js");
-        
-        worker.onmessage = (ev: MessageEvent) => {
+    private worker: Worker;
+   
+   
+    compute() {
+        if (this.worker != undefined)
+            this.worker.terminate();
+                        
+        this.worker = new Worker("./Build/Workers/bootWorker.js");
+        this.solves.removeAll();
+        var solve1 = new Solve();
+        var solve2 = new Solve();
+        var solve3 = new Solve();
+        var solve4 = new Solve();
+        solve1.color('green'); solve1.name = "L";
+        solve2.color('red'); solve2.name = "R";
+        solve3.color('blue'); solve3.name = "V";
+        solve4.color('grey'); solve4.name = "Y";
+        this.worker.onmessage = (ev: MessageEvent) => {
             var data = <Solver.IWorkerResult>ev.data;
             
             var Time = new Float64Array(data.Time);
             var Solves = new Array<Float64Array>(12);
             for (var i = 0; i < 12; i++)
                 Solves[i] = new Float64Array(data.Solves[i]);
-            this.solves.push({
-                t: Time,
-                x: Solves[6],
-                name: ""
-            });
-        }
+                
+            solve1.x.push(Solves[0].map((val, i) => {return val - Solves[1][i]}));
+            solve2.x.push(Solves[2].map((val, i) => {return val - Solves[3][i]}));
+            solve3.x.push(Solves[4].map((val, i) => {return val - Solves[5][i]}));
+            solve4.x.push(Solves[6].map((val, i) => {return val - Solves[7][i]}));
+            
+            if (solve1.t.length == 0) {
+                solve1.t = solve2.t = solve3.t = solve4.t = Time;
+                this.solves.push(solve1, solve2, solve3, solve4);
+            }
+        }        
         
         var message: Solver.IWorkerMessage = {
             x0: initVector(),
             t0: 0,
-            options: {},
-            tFinal: 35000,
-            rightSide: "rightSide.js"
+            options: { OutputStep: typeof this.step() == 'string' ? parseFloat(<any>this.step()) : this.step()},
+            tFinal: 20000,
+            rightSide: "rightSide.js",
+            sigma: typeof this.sigma() == 'string' ? parseFloat(<any>this.sigma()) : this.sigma(),
+            count: typeof this.count() == 'string' ? parseFloat(<any>this.count()) : this.count()
         }
-        worker.postMessage(JSON.stringify(message));
+        this.worker.postMessage(JSON.stringify(message));
+    }
+   
+    constructor() {
         ko.applyBindings(this);
     }
 }

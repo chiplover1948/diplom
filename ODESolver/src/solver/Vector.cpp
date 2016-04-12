@@ -137,9 +137,9 @@ Matrix *Vector::operator&(const Vector & obj)
 	return res;
 }
 
-Vector *Vector::Lerp(double t, double t0, Vector &v0, double t1, Vector &v1)
+Vector Vector::Lerp(double t, double t0, Vector &v0, double t1, Vector &v1)
 {
-	return new Vector((v0 * (t1 - t) + v1 * (t - t0)) / (t1 - t0));
+	return Vector((v0 * (t1 - t) + v1 * (t - t0)) / (t1 - t0));
 }
 
 ostream& operator<<(ostream& os, const Vector& obj) {

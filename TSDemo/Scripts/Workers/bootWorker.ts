@@ -5,7 +5,7 @@ importScripts("../../lib/solver/js-solver.js");
 
 var message;
 
-require(["./MainWorker"], ( MainWorker) => {
+require(["./mainWorker"], ( MainWorker) => {
     self.onmessage = MainWorker;
     if (message !== undefined)
         self.onmessage(message)

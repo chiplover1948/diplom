@@ -7,7 +7,8 @@
 class Vector;
 typedef void RightSide(double, double *, double *);
 
-struct Options {
+class Options {
+public:
     double InitialStep;
     double AbsoluteTolerance;
     double RelativeTolerance;
@@ -16,12 +17,12 @@ struct Options {
     double MaxScale, MinScale;
     Matrix *Jacobian;
     int NumberOfIterations;
-
+    
     Options() {
             InitialStep = 0.0;
-            AbsoluteTolerance = 1e-10;
-            RelativeTolerance = 1e-10;
-            MaxStep = 1.0;
+            AbsoluteTolerance = 1e-8;
+            RelativeTolerance = 1e-6;
+            MaxStep = DBL_MAX;
             MinStep = 0.0;
             MaxScale = 1.1;
             MinScale = 0.9;
@@ -29,6 +30,15 @@ struct Options {
             NumberOfIterations = 5;
             Jacobian = NULL;
     }
+    double getInitialStep() const {return InitialStep;}
+    void setInitialStep(double val) {InitialStep = val;}
+    double getOutputStep() const {return OutputStep;}
+    void setOutputStep(double val) {OutputStep = val;}
+    double getAbsoluteTolerance() const {return AbsoluteTolerance;}
+    void setAbsoluteTolerance(double val) {AbsoluteTolerance = val;}
+    double getRelativeTolerance() const {return RelativeTolerance;}
+    void setRelativeTolerance(double val) {RelativeTolerance = val;}
+    
 };
 
 class SolPoint {

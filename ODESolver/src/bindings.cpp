@@ -83,7 +83,10 @@ EMSCRIPTEN_BINDINGS(solver) {
 		.function("Solve", &Gear::Solve);
 			
 	class_<Options>("Options")
-		.constructor<>();
+		.constructor<>()
+        .property("OutputStep", &Options::getOutputStep, &Options::setOutputStep)
+        .property("AbsoluteTolerance", &Options::getAbsoluteTolerance, &Options::setAbsoluteTolerance)
+        .property("RelativeTolerance", &Options::getRelativeTolerance, &Options::setRelativeTolerance);
 		
 	function("ChemistrySolver", &ChemistrySolver, allow_raw_pointers());
 		

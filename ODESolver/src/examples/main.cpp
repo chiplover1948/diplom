@@ -12,6 +12,84 @@ void F(double t, double *x, double *res) {
 }
 
 
+void CRN (double t, double *x, double *r) {
+    double deg = 0.0008;
+    double cat = 0.0008;
+    double pol = 0.0167;
+    double nick = 0.0167;
+    double x0 = 4;
+    double ann = 0.01;
+    double bind = 5.4e-06;
+    double bind2 = 0.001;
+    double bind1 = 5e-05;
+    double unbind = 0.1126;
+    double Cmax = 1000;
+    double c = 0.0008;
+    double kt = 0.001;
+    double ku = 0.001;
+    double s = 2;
+    double e = 2.71828183;
+    double T = 298.15;
+
+    // Assign states
+    double L = x[0];
+    double L$ = x[1];
+    double R = x[2];
+    double R$ = x[3];
+    double V = x[4];
+    double V$ = x[5];
+    double Y = x[6];
+    double Y$ = x[7];
+    double sp9 = x[8];
+    double sp10 = x[9];
+    double sp11 = x[10];
+    double sp12 = x[11];
+
+    // Define reaction propensities
+    double r_0 = (cat * R);
+    double r_1 = (cat * R$);
+    double r_2 = (cat * Y);
+    double r_3 = (cat * Y$);
+    double r_4 = (deg * sp9);
+    double r_5 = (deg * sp10);
+    double r_6 = (cat * sp9);
+    double r_7 = (cat * sp10);
+    double r_8 = (cat * sp9);
+    double r_9 = (cat * sp10);
+    double r_10 = (cat * sp11);
+    double r_11 = (cat * sp12);
+    double r_12 = (deg * V);
+    double r_13 = (deg * V$);
+    double r_14 = ((ann * sp12) * sp11);
+    double r_15 = (0.2 * V);
+    double r_16 = (0.2 * V$);
+    double r_17 = (0.1 * Y);
+    double r_18 = (0.1 * Y$);
+    double r_19 = ((0.1 * Y) * Y$);
+    double r_20 = ((0.01 * Y) * L);
+    double r_21 = ((0.01 * Y$) * L$);
+    double r_22 = (L$ * L);
+    double r_23 = ((ann * R$) * R);
+    double r_24 = ((ann * V$) * V);
+    double r_25 = ((ann * sp10) * sp9);
+
+    // Assign derivatives
+    double dL = -r_22;
+    double dL$ = -r_22;
+    double dR = -r_23;
+    double dR$ = -r_23;
+    double dV = r_8 + r_10 - r_12 - r_24;
+    double dV$ = r_9 + r_11 - r_13 - r_24;
+    double dY = r_15 - r_17 - r_19 - r_20;
+    double dY$ = r_16 - r_18 - r_19 - r_21;
+    double dsp9 = r_0 + r_3 - r_4 - r_25;
+    double dsp10 = r_1 + r_2 - r_5 - r_25;
+    double dsp11 = r_6 - r_14;
+    double dsp12 = r_7 - r_14;
+
+    r[0] = dL, r[1] = dL$, r[2] = dR, r[3] = dR$, r[4] = dV, r[5] = dV$, r[6] = dY, r[7] = dY$, r[8] = dsp9, r[9] = dsp10, r[10] = dsp11, r[11] = dsp12;
+}
+
 void Lotka(double t, double *x, double *r)
 {
     // Assign states
@@ -65,8 +143,8 @@ int main() {
 	int i;
     double dt;
     clock_t start, end;
-	Vector x0 = Vector(3);
-	x0[0] = 1.0; x0[1] = 0.0; x0[2] = 0.0;
+	Vector x0 = Vector(12);
+	x0[2] = 4.0;
 	
 	/*Vector x0 = Vector(19);
 	
@@ -78,20 +156,20 @@ int main() {
     x0[11] = 3000000.0;
     x0[12] = 30000.0;*/
 	Options opts = Options();
-	opts.MaxStep = 1.0;
-	Gear solver = Gear(0.0, x0, &F, opts);
+    opts.OutputStep = 100.0;
+	Gear solver = Gear(0.0, x0, &CRN, opts);
     int count = 0;
         
     start = clock();
         SolPoint s = SolPoint(0.0, x0);
         do{
         	count++;
-            //std::cout <<"time=" << s.GetTime() << ": " << s.GetSolve()[0] << " " << s.GetSolve()[1] << std::endl;            
-        } while ((s = solver.Solve()).GetTime() < 500.0);
+            std::cout <<"time=" << s.GetTime() << ": " << s.GetSolve()[6] << " " << s.GetSolve()[1] << std::endl;            
+        } while ((s = solver.Solve()).GetTime() < 20000.0);
     
     end = clock();
     float diff = (((float)end - (float)start) / 1000000.0F ) * 1000;   
-        std::cout << "process took " << diff << " milliseconds, " << count << " points, " << solver.fails << " fails."  << std::endl;
+        std::cout << "process took " << diff << " milliseconds, " << count << " points " << std::endl;
 	std::cin >> i;
 	return 0;
 }  

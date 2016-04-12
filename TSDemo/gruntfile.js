@@ -79,5 +79,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('build', ['copy:library', 'bower', 'ts:dev', 'copy:dist']);
     grunt.registerTask('installDeps', ['copy:library','bower', 'tsd']);
 	grunt.registerTask('default', ['clean', 'build']);
+	grunt.registerTask('deploy', ['clean', 'copy:library', 'bower', 'ts:release', 'copy:dist', 'buildcontrol']);
+	
 
 };

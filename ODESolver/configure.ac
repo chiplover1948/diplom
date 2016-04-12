@@ -11,7 +11,7 @@ AM_CONDITIONAL([JS], [test x$javascript = xtrue])
 if test x$javascript = xtrue
 then
 	AC_SUBST([exeext], [.js])
-	AC_SUBST([flags], ['-s RESERVED_FUNCTION_POINTERS=20 --memory-init-file 0'])
+	AC_SUBST([flags], ['-s RESERVED_FUNCTION_POINTERS=20 -s ALLOW_MEMORY_GROWTH=1 --memory-init-file 0'])
 	AC_SUBST([bind], ['--bind'])
 fi
 AC_PROG_CXX

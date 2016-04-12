@@ -30,6 +30,10 @@ declare module Module {
     var Gear: GearFactory;
     
     interface Options {
+    	InitialStep: number;
+    	OutputStep: number;
+    	AbsoluteTolerance: number;
+    	RelativeTolerance: number;
         delete();
     }
     
