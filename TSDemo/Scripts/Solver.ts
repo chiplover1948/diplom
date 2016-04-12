@@ -33,8 +33,6 @@ export interface IRightSide {
 function convertOpts(opts: IOptions): Module.Options {
     var Opts = new Module.Options();
     Opts.OutputStep = opts.OutputStep;
-    Opts.AbsoluteTolerance = 1e-8;
-    Opts.RelativeTolerance = 1e-6;
     return Opts;
 }
 

@@ -465,10 +465,16 @@ class Solve {
     
     middle = ko.pureComputed(() => {
         var arr = new Array<number>();
-        if (this.upper.length == 0) return arr;
+        if (this.t.length == 0) return arr;
         for (var i = 0; i < this.t.length; i++) {
-            arr.push((this.upper[i] - this.Lower()[i]) / 2);
+            var tmp = new Array<number>();
+            for (var j = 0; j < this.x().length; j++) {
+                tmp.push(this.x()[j][i]);
+            }
+            tmp.sort();
+            arr.push(tmp[Math.floor(tmp.length / 2)]);
         }
+        return arr;
     })
     
     name: string = "species";
@@ -482,9 +488,9 @@ class Solve {
 
 class ViewModel {
     solves: KnockoutObservableArray<Solve> = ko.observableArray([]);
-    sigma: KnockoutObservable<number> = ko.observable(0.1);
+    sigma: KnockoutObservable<number> = ko.observable(0.2);
     count: KnockoutObservable<number> = ko.observable(50);
-    step: KnockoutObservable<number> = ko.observable(100);
+    step: KnockoutObservable<number> = ko.observable(200);
     private t: KnockoutObservableArray<number> = ko.observableArray([]);
     private worker: Worker;
    
@@ -499,10 +505,10 @@ class ViewModel {
         var solve2 = new Solve();
         var solve3 = new Solve();
         var solve4 = new Solve();
-        solve1.color('green'); solve1.name = "L";
-        solve2.color('red'); solve2.name = "R";
-        solve3.color('blue'); solve3.name = "V";
-        solve4.color('grey'); solve4.name = "Y";
+        solve1.color('green'); solve1.name = "L - L'";
+        solve2.color('red'); solve2.name = "R - R'";
+        solve3.color('blue'); solve3.name = "V - V'";
+        solve4.color('grey'); solve4.name = "Y - Y'";
         this.worker.onmessage = (ev: MessageEvent) => {
             var data = <Solver.IWorkerResult>ev.data;
             
@@ -526,7 +532,7 @@ class ViewModel {
             x0: initVector(),
             t0: 0,
             options: { OutputStep: typeof this.step() == 'string' ? parseFloat(<any>this.step()) : this.step()},
-            tFinal: 20000,
+            tFinal: 40000,
             rightSide: "rightSide.js",
             sigma: typeof this.sigma() == 'string' ? parseFloat(<any>this.sigma()) : this.sigma(),
             count: typeof this.count() == 'string' ? parseFloat(<any>this.count()) : this.count()
