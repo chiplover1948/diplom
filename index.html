@@ -1,0 +1,33 @@
+<html>
+<head>
+    <title>Solver</title>
+    <script data-main="Build/Bootstrap.js" src="lib/requirejs/require.js"></script>
+    <link rel="stylesheet" type="text/css" href="lib/IDD/idd.css" />
+</head>
+<body>
+    <div>
+        <span>Sigma: </span>
+        <input type="text" data-bind="value: sigma"/>
+        <span>Number of initials:</span>
+        <input type="text" data-bind="value: count"/>
+        <span>Output step:</span>
+        <input type="text" data-bind="value: step"/>
+        <button data-bind="click: compute">Compute</button>
+    </div>
+    <div data-idd-plot="chart" style="height:95%; width:100%;">
+        <div data-idd-plot="plot" data-bind="foreach: solves">
+            
+            <div
+                data-idd-plot="area"             
+                data-bind="
+                    iddX: t,
+                    iddAreaY1: Lower,
+                    iddAreaY2: upper,
+                    iddAreaFill: CIColor,
+                    attr: { 'data-idd-name': name }
+                ">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
