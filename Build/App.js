@@ -98,7 +98,6 @@ define(["require", "exports", "jquery", "knockout", "idd", "tinycolor2", "Build/
                 x0: initVector(),
                 t0: 0,
                 options: { OutputStep: typeof this.step() == 'string' ? parseFloat(this.step()) : this.step() },
-                tFinal: 40000,
                 rightSide: "rightSide.js",
                 sigma: typeof this.sigma() == 'string' ? parseFloat(this.sigma()) : this.sigma(),
                 count: typeof this.count() == 'string' ? parseFloat(this.count()) : this.count()

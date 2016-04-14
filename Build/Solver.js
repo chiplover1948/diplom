@@ -29,8 +29,20 @@ define(["require", "exports"], function (require, exports) {
         function GearSolver(t0, x0, f, opts) {
             this.pointer = convertFunc(f, x0.length);
             this.solver = new Module.Gear(t0, convertVector(x0), this.pointer, convertOpts(opts));
+            if (opts.OutputStep > 0) {
+                this.xout = new Array();
+                this.tout = t0 + opts.OutputStep;
+            }
         }
         GearSolver.prototype.Solve = function () {
+            if (this.OutputStep > 0) {
+                do {
+                    var s = this.solver.Solve();
+                    var time = s.Time();
+                    this.xout = convertVectorBack(s.Solve());
+                    s.delete();
+                } while (time < this.tout);
+            }
             var s = this.solver.Solve();
             var res = { time: s.Time(), solve: convertVectorBack(s.Solve()) };
             s.delete();
