@@ -46,9 +46,10 @@ private:
     Vector solve;
     double time;    
 public:
-    Vector GetSolve() {return solve;}
-    double GetTime() {return time;}
+    Vector GetSolve() const {return solve;}
+    double GetTime() const {return time;}
     SolPoint(double t, Vector s): solve(s), time(t) {}
+    SolPoint(const SolPoint &s): solve(s.solve), time(s.time) {}
     friend std::ostream& operator<<(std::ostream& os, SolPoint& obj);
     void Print() {std::cout << *this;}
 };

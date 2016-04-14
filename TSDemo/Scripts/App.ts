@@ -532,7 +532,6 @@ class ViewModel {
             x0: initVector(),
             t0: 0,
             options: { OutputStep: typeof this.step() == 'string' ? parseFloat(<any>this.step()) : this.step()},
-            tFinal: 40000,
             rightSide: "rightSide.js",
             sigma: typeof this.sigma() == 'string' ? parseFloat(<any>this.sigma()) : this.sigma(),
             count: typeof this.count() == 'string' ? parseFloat(<any>this.count()) : this.count()

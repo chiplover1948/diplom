@@ -21,7 +21,6 @@ export interface IWorkerMessage {
     rightSide: string;
     x0: IVector;
     t0: number;
-    tFinal: number;
     sigma: number;
     count: number;
 }
@@ -64,18 +63,39 @@ function convertVectorBack(vec: Module.Vector): IVector {
 export class GearSolver {
     private solver: Module.Gear;
     private pointer;
+    private OutputStep: number;
+    private tout: number;
+    private xout: Array<number>;
     
     constructor(t0: number, x0: IVector, f: IRightSide, opts: IOptions) {
         this.pointer = convertFunc(f, x0.length);
-        this.solver = new Module.Gear(t0, convertVector(x0), this.pointer, convertOpts(opts));      
+        this.solver = new Module.Gear(t0, convertVector(x0), this.pointer, convertOpts(opts));
+        if (opts.OutputStep > 0) {
+            this.xout = new Array<number>();
+            this.tout = t0 + opts.OutputStep;
+        }
     }
     
     Solve(): ISolution {
+        if (this.OutputStep > 0) {
+            do {                        
+                var s = this.solver.Solve();
+                var time = s.Time(); 
+                this.xout = convertVectorBack(s.Solve());
+                s.delete();
+            } while (time < this.tout);
+            
+        }
+        
+        
+        
         var s = this.solver.Solve();
         var res = {time: s.Time(), solve: convertVectorBack(s.Solve())};
         s.delete();
         return res;       
     }
+    
+    
     
     dispose() {
         this.solver.delete();

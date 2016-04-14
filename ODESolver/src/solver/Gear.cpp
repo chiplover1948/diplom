@@ -15,8 +15,8 @@ Gear::Gear(double t0, Vector &x0, RightSide *rightSide, Options &opts)
         tout = t0 + opts.OutputStep;
         xout = new Vector(x0);
         resX = new Vector(x0);
-        resT = t0;
-        tlast = t0;
+        last = new SolPoint(t0, x0);
+        next = new SolPoint(t0, x0);
     }
     
     Vector dx = f(t0, x0);
@@ -46,7 +46,6 @@ Gear::Gear(double t0, Vector &x0, RightSide *rightSide, Options &opts)
     int qmax = 5;
     int qcurr = 2;
 
-
     //Compute Nordstieck's history matrix at t=t0;
     Matrix *zn = new Matrix(n, qmax + 1);
     for (int i = 0; i < n; i++)
@@ -71,15 +70,24 @@ Gear::Gear(double t0, Vector &x0, RightSide *rightSide, Options &opts)
     currstate.en = new Vector(n);
 }
 
-SolPoint Gear::Solve()
-{    
-    if (opts.OutputStep > 0.0 && tout < resT) {
+SolPoint Gear::Solve() {
+    if (opts.OutputStep > 0.0) {
+        while (tout >= next->GetTime()) {
+            *last = *next;
+            *next = SolveNext();
+        }
+        
         double toutLerp = tout;
         tout += opts.OutputStep;
-        return SolPoint(toutLerp, Vector::Lerp(toutLerp, tlast, *xout, resT, *resX));
-    }
-    
-    
+        Vector lastSolve = last->GetSolve();
+        Vector nextSolve = next->GetSolve();
+        return SolPoint(tout, Vector::Lerp(toutLerp, last->GetTime(), lastSolve, next->GetTime(), nextSolve));
+    } else
+        return SolveNext();
+}
+
+SolPoint Gear::SolveNext()
+{       
     bool isIterationFailed = false;
 
     // Predictor step
@@ -127,23 +135,7 @@ SolPoint Gear::Solve()
         }
     } while (isIterationFailed);
     
-    if (opts.OutputStep > 0.0) 
-    {
-        if (resT <= tout) {
-            *xout = *resX;
-            tlast = resT;
-            return Solve();
-        }
-        else {
-            double toutLerp = tout;
-            tout += opts.OutputStep;
-            return SolPoint(toutLerp, Vector::Lerp(toutLerp, tlast, *xout, resT, *resX));
-        }
-    } 
-    else 
-    {
-        return SolPoint(resT, *resX);
-    }
+    return SolPoint(resT, *resX);
 }
 
 void Gear::Predictor() 

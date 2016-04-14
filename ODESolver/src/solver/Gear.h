@@ -18,6 +18,8 @@ public:
         if (opts.OutputStep > 0) {
             delete xout;
             delete resX;
+            delete last;
+            delete next;
         }
     }
     SolPoint Solve();
@@ -28,11 +30,13 @@ private:
     int n;
     Vector *xout;
     Vector *resX;
-    double tout, resT, tlast;
+    double resT, tout;
+    SolPoint *last, *next;
     
     Vector f(double, Vector &);
     void Corrector(bool &);
     void Predictor();
+    SolPoint SolveNext();
     static double Factorial(int n);
     static double ToleranceNorm(const Vector &, double, double, const Vector &);
 
