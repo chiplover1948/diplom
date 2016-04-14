@@ -17,5 +17,5 @@ function NormalPair(): Array<number> {
         s = Math.pow(x, 2) + Math.pow(y, 2);
     } while (s > 1 || s === 0);
     var t =  Math.sqrt((-2) * Math.log(s) / s);
-    return [x * t * 0.2, y * t * 0.2];    
+    return [x * t, y * t];    
 }
