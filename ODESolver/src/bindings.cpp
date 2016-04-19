@@ -75,7 +75,8 @@ EMSCRIPTEN_BINDINGS(solver) {
 		.constructor<int>()
 		.function("SetElement", &Vector::SetElement)
 		.function("GetElement", &Vector::GetElement)
-		.function("Print", &Vector::Print);
+		.function("Print", &Vector::Print)
+		.function("Length", &Vector::Dimension);
 		
 	class_<Gear>("Gear")
 		.constructor(&GetSolver, allow_raw_pointers())

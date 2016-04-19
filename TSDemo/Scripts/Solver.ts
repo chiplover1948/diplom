@@ -54,7 +54,7 @@ function convertVector(vec: IVector): Module.Vector {
 
 function convertVectorBack(vec: Module.Vector): IVector {
     var res: IVector = new Array<number>();
-    for(var i = 0; i < 12; i++)
+    for(var i = 0; i < vec.Length(); i++)
         res[i] = vec.GetElement(i);
     return res;
 }
@@ -62,33 +62,19 @@ function convertVectorBack(vec: Module.Vector): IVector {
 
 export class GearSolver {
     private solver: Module.Gear;
+    private opts: Module.Options;
     private pointer;
+    private x0: Module.Vector;
     private OutputStep: number;
-    private tout: number;
-    private xout: Array<number>;
     
     constructor(t0: number, x0: IVector, f: IRightSide, opts: IOptions) {
         this.pointer = convertFunc(f, x0.length);
-        this.solver = new Module.Gear(t0, convertVector(x0), this.pointer, convertOpts(opts));
-        if (opts.OutputStep > 0) {
-            this.xout = new Array<number>();
-            this.tout = t0 + opts.OutputStep;
-        }
+        this.opts = convertOpts(opts)
+        this.x0 = convertVector(x0);
+        this.solver = new Module.Gear(t0, this.x0, this.pointer, this.opts);
     }
     
     Solve(): ISolution {
-        if (this.OutputStep > 0) {
-            do {                        
-                var s = this.solver.Solve();
-                var time = s.Time(); 
-                this.xout = convertVectorBack(s.Solve());
-                s.delete();
-            } while (time < this.tout);
-            
-        }
-        
-        
-        
         var s = this.solver.Solve();
         var res = {time: s.Time(), solve: convertVectorBack(s.Solve())};
         s.delete();
@@ -99,6 +85,8 @@ export class GearSolver {
     
     dispose() {
         this.solver.delete();
+        this.opts.delete();
+        this.x0.delete();
         Module.Runtime.removeFunction(this.pointer);
     }
 }

@@ -5,6 +5,16 @@
     <link rel="stylesheet" type="text/css" href="lib/IDD/idd.css" />
 </head>
 <body>
+    <style>
+        #idd {
+            float: left;
+            widows: 80%;
+        }
+        #stat {
+            float: right;
+            width: 20%;
+        }
+    </style>
     <div>
         <span>Sigma: </span>
         <input type="text" data-bind="value: sigma"/>
@@ -14,7 +24,7 @@
         <input type="text" data-bind="value: step"/>
         <button data-bind="click: compute">Compute</button>
     </div>
-    <div data-idd-plot="chart" style="height:95%; width:100%;">
+    <div id="idd" data-idd-plot="chart" style="height:95%; width:100%;">
         <div data-idd-plot="plot" data-bind="foreach: solves">
             <div data-idd-plot="polyline"             
                 data-bind="
@@ -35,6 +45,9 @@
                 ">
             </div>
         </div>
+    </div>
+    <div id="stat">
+        
     </div>
 </body>
 </html>
