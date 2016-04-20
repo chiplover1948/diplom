@@ -6,9 +6,9 @@
 </head>
 <body>
     <style>
-        #idd {
+        .idd {
             float: left;
-            widows: 80%;
+            width: 80%;
         }
         #stat {
             float: right;
@@ -24,7 +24,7 @@
         <input type="text" data-bind="value: step"/>
         <button data-bind="click: compute">Compute</button>
     </div>
-    <div id="idd" data-idd-plot="chart" style="height:95%; width:100%;">
+    <div class="idd" id="idd" data-idd-plot="chart" style="height:95%">
         <div data-idd-plot="plot" data-bind="foreach: solves">
             <div data-idd-plot="polyline"             
                 data-bind="
@@ -47,7 +47,14 @@
         </div>
     </div>
     <div id="stat">
-        
+        <div>
+            <span>Average time for point:</span>
+            <span data-bind="text: averagePoint().toFixed(3)"></span>
+        </div>
+        <div>
+            <span>Average time for one solution:</span>
+            <span data-bind="text: averageSolution().toFixed(3)"></span>
+        </div>
     </div>
 </body>
 </html>

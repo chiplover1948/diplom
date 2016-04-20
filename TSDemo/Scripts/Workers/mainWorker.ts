@@ -18,6 +18,9 @@ export = (ev: MessageEvent) => {
     
     importScripts("../PrecompiledScripts/" + message.rightSide);
     initials.forEach((val, count) => {
+        var averageTime = 0;
+        var points = 0;
+        var totalTime = performance.now();
         var time = new Array<number>();
         var solves = new Array<Array<number>>(n);
         var lastSolve = new Array<number>(n);
@@ -34,7 +37,10 @@ export = (ev: MessageEvent) => {
             solves.forEach((v, i) => {
                 v.push(s.solve[i]);
             });
+            var timeForPoint = performance.now();
             s = gear.Solve();
+            points++;
+            averageTime += performance.now() - timeForPoint;
         } while (s.time <= 50000);
         gear.dispose();
         lastSolve = solves.map(val => val[val.length - 1]);
@@ -46,7 +52,10 @@ export = (ev: MessageEvent) => {
             solves.forEach((v, i) => {
                 v.push(s.solve[i]);
             });
+            var timeForPoint = performance.now();
             s = gear.Solve();
+            points++;
+            averageTime += performance.now() - timeForPoint;
         }
         gear.dispose();
         lastSolve = solves.map(val => val[val.length - 1]);
@@ -58,7 +67,10 @@ export = (ev: MessageEvent) => {
             solves.forEach((v, i) => {
                 v.push(s.solve[i]);
             });
+            var timeForPoint = performance.now();
             s = gear.Solve();
+            points++;
+            averageTime += performance.now() - timeForPoint;
         }
         gear.dispose();
         
@@ -76,7 +88,9 @@ export = (ev: MessageEvent) => {
         resultSolves.forEach(val => returnTransfer.push(val.buffer));
         (<any>self).postMessage(<Solver.IWorkerResult>{
             Time: resultTime.buffer, 
-            Solves: resultSolves.map(val => val.buffer)
+            Solves: resultSolves.map(val => val.buffer),
+            AverageTime: averageTime / points,
+            TotalTime: performance.now() - totalTime
         }, returnTransfer);
         
         

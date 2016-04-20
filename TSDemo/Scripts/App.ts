@@ -138,9 +138,12 @@ class ViewModel {
     sigma: KnockoutObservable<number> = ko.observable(0.2);
     count: KnockoutObservable<number> = ko.observable(50);
     step: KnockoutObservable<number> = ko.observable(200);
+    averagePoint = ko.observable(0);
+    averageSolution = ko.observable(0);
     private t: KnockoutObservableArray<number> = ko.observableArray([]);
     private worker: Worker;
-   
+    private averagesPoint: Array<number>;
+    private averagesSolution: Array<number>;
    
     compute() {
         if (this.worker != undefined)
@@ -148,6 +151,11 @@ class ViewModel {
                         
         this.worker = new Worker("./Build/Workers/bootWorker.js");
         this.solves.removeAll();
+        this.averagePoint(0);
+        this.averageSolution(0);
+        this.averagesPoint = new Array();
+        this.averagesSolution = new Array();
+        
         var solve1 = new Solve();
         var solve2 = new Solve();
         var solve3 = new Solve();
@@ -177,6 +185,10 @@ class ViewModel {
                 solve1.t = solve2.t = solve3.t = solve4.t = Time;
                 this.solves.push(solve1, solve2, solve3, solve4);
             }
+            this.averagesPoint.push(data.AverageTime);
+            this.averagesSolution.push(data.TotalTime);
+            this.averagePoint(this.averagesPoint.reduce((a, b) => {return a + b;}) / this.averagesPoint.length);
+            this.averageSolution(this.averagesSolution.reduce((a, b) => {return a + b;}) / this.averagesSolution.length);
         }        
         
         var message: Solver.IWorkerMessage = {
@@ -195,21 +207,7 @@ class ViewModel {
     }
 }
 
-$(document).ready(function() {			
-    //var chart = InteractiveDataDisplay.asPlot('chart');
-    //setArray();
-    /*var timeStart = performance.now();
-    var arr = Normal.Normal(40000);
-    var timeEnd = performance.now();
-    console.log("Generation takes " + (timeEnd - timeStart).toString() + " ms");
-    var ctx = (<HTMLCanvasElement>document.getElementById("canvas")).getContext("2d");
-    var width = ctx.canvas.width;
-    ctx.translate(width / 2, width / 2);
-    ctx.scale(width / 2, width / 2);
-    arr.forEach((val) => {
-        ctx.fillRect(val[0], val[1], 2 / width, 2 / width);
-    })*/
-    
+$(document).ready(function() {
     new ViewModel();
     idd.asPlot($("div[data-idd-plot='chart']")); 
 });

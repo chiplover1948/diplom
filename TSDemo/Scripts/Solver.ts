@@ -3,6 +3,8 @@
 export interface IWorkerResult {
     Time: ArrayBuffer;
     Solves: Array<ArrayBuffer>;
+    AverageTime: number;
+    TotalTime: number;
 }
 
 export interface IOptions {
