@@ -21,28 +21,18 @@ define(["require", "exports"], function (require, exports) {
     }
     function convertVectorBack(vec) {
         var res = new Array();
-        for (var i = 0; i < 12; i++)
+        for (var i = 0; i < vec.Length(); i++)
             res[i] = vec.GetElement(i);
         return res;
     }
     var GearSolver = (function () {
         function GearSolver(t0, x0, f, opts) {
             this.pointer = convertFunc(f, x0.length);
-            this.solver = new Module.Gear(t0, convertVector(x0), this.pointer, convertOpts(opts));
-            if (opts.OutputStep > 0) {
-                this.xout = new Array();
-                this.tout = t0 + opts.OutputStep;
-            }
+            this.opts = convertOpts(opts);
+            this.x0 = convertVector(x0);
+            this.solver = new Module.Gear(t0, this.x0, this.pointer, this.opts);
         }
         GearSolver.prototype.Solve = function () {
-            if (this.OutputStep > 0) {
-                do {
-                    var s = this.solver.Solve();
-                    var time = s.Time();
-                    this.xout = convertVectorBack(s.Solve());
-                    s.delete();
-                } while (time < this.tout);
-            }
             var s = this.solver.Solve();
             var res = { time: s.Time(), solve: convertVectorBack(s.Solve()) };
             s.delete();
@@ -50,6 +40,8 @@ define(["require", "exports"], function (require, exports) {
         };
         GearSolver.prototype.dispose = function () {
             this.solver.delete();
+            this.opts.delete();
+            this.x0.delete();
             Module.Runtime.removeFunction(this.pointer);
         };
         return GearSolver;
