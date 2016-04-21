@@ -3,26 +3,75 @@
     <title>Solver</title>
     <script data-main="Build/Bootstrap.js" src="lib/requirejs/require.js"></script>
     <link rel="stylesheet" type="text/css" href="lib/IDD/idd.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 </head>
 <body>
     <style>
         .idd {
-            float: left;
+            float: right;
             width: 80%;
         }
-        #stat {
+        .input {
             float: right;
+        }
+        .header {
+            float: left;
+        }
+        div.ui-accordion-content {
+            padding: 5px !important;
+        }
+        #settings {
+            float: left;
             width: 20%;
         }
     </style>
-    <div>
-        <span>Sigma: </span>
-        <input type="text" data-bind="value: sigma"/>
-        <span>Number of initials:</span>
-        <input type="text" data-bind="value: count"/>
-        <span>Output step:</span>
-        <input type="text" data-bind="value: step"/>
-        <button data-bind="click: compute">Compute</button>
+    <div data-bind="with: settings" id="settings">
+        <select style="width: 100%" class="selectTraining" data-bind="options: availableSystems, value: currentSystem, selectmenu: {width: '100%'}">
+        </select>
+        <div data-bind="accordion: {heightStyle: 'content'}">
+            <h3>Parameters</h3>
+            <div>
+            <table style="width: 100%">
+                <tbody>
+                    <tr><td>
+                        <span class="header">Sigma: </span>
+                        <input class="input" type="text" data-bind="value: sigma"/>
+                    </td></tr>
+                    <tr><td>
+                        <span class="header">Number of initials:</span>
+                        <input class="input" type="text" data-bind="value: count"/>
+                    </td></tr>
+                    <tr><td>
+                        <span class="header">Output step:</span>
+                        <input class="input" type="text" data-bind="value: step"/>
+                    </td></tr>
+                </tbody>
+            </table>
+            </div>
+            <h3>Events</h3>
+            <div >
+                <table style="width: 100%">
+                    <thead>
+                        <th>Species</th>
+                        <th>Time</th>
+                        <th>Value</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                    <!-- ko foreach: events -->
+                        <tr>                  
+                            <td style="width: 25%"><select data-bind="options: avalilableSpecies, value: species"></select></td>
+                            <td style="width: 30%"><input style="width: 100%" type="text" data-bind="value: time"/></td>
+                            <td style="width: 30%"><input style="width: 100%" type="text" data-bind="value: value"/></td>
+                            <td style="width: 15%"><button data-bind="click: $parent.RemoveEvent">X</button></td>
+                        </tr>
+                    <!-- /ko -->
+                    </tbody>
+                </table>
+                <button style="width: 100%" data-bind="click: AddEvent">Add event</button>
+            </div>
+        </div>
+        <button style="width: 100%" data-bind="click: $parent.compute, button: {}">Compute</button>
     </div>
     <div class="idd" id="idd" data-idd-plot="chart" style="height:95%">
         <div data-idd-plot="plot" data-bind="foreach: solves">
@@ -44,16 +93,6 @@
                     attr: { 'data-idd-name': name }
                 ">
             </div>
-        </div>
-    </div>
-    <div id="stat">
-        <div>
-            <span>Average time for point:</span>
-            <span data-bind="text: averagePoint().toFixed(3)"></span>
-        </div>
-        <div>
-            <span>Average time for one solution:</span>
-            <span data-bind="text: averageSolution().toFixed(3)"></span>
         </div>
     </div>
 </body>

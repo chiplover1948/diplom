@@ -4,6 +4,9 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/tinycolor/tinycolor.d.ts" />
 /// <amd-dependency path="Build/PrecompiledScripts/idd-ko.js"/>
+/// <amd-dependency path="knockout-jqueryui/accordion" />
+/// <amd-dependency path="knockout-jqueryui/button" />
+/// <amd-dependency path="knockout-jqueryui/selectmenu" />
 
 import $ = require("jquery");
 import ko = require("knockout");
@@ -133,19 +136,41 @@ class Solve {
     });
 }
 
-class ViewModel {
-    solves: KnockoutObservableArray<Solve> = ko.observableArray([]);
+class PIEvent {
+    species = ko.observable("L");
+    avalilableSpecies = ["L", "L'", "R", "R'"];
+    value = ko.observable(0);
+    time = ko.observable(0);
+}
+
+class Settings {
+    availableSystems = ["CRN", "DNA 2 domain"];
+    currentSystem = "CRN";
     sigma: KnockoutObservable<number> = ko.observable(0.2);
     count: KnockoutObservable<number> = ko.observable(50);
     step: KnockoutObservable<number> = ko.observable(200);
+    events = ko.observableArray<PIEvent>([]);
+    
+    AddEvent = () => {
+        this.events.push(new PIEvent());
+    }
+    RemoveEvent = (data, e) => {
+        e.stopPropagation()
+        this.events.remove(data);
+    }
+}
+
+class ViewModel {
     averagePoint = ko.observable(0);
     averageSolution = ko.observable(0);
+    solves: KnockoutObservableArray<Solve> = ko.observableArray([]);
     private t: KnockoutObservableArray<number> = ko.observableArray([]);
     private worker: Worker;
     private averagesPoint: Array<number>;
     private averagesSolution: Array<number>;
+    settings = new Settings();
    
-    compute() {
+    compute = () => {
         if (this.worker != undefined)
             this.worker.terminate();
                         
@@ -194,10 +219,10 @@ class ViewModel {
         var message: Solver.IWorkerMessage = {
             x0: initVector_(),
             t0: 0,
-            options: { OutputStep: typeof this.step() == 'string' ? parseFloat(<any>this.step()) : this.step()},
+            options: { OutputStep: typeof this.settings.step() == 'string' ? parseFloat(<any>this.settings.step()) : this.settings.step()},
             rightSide: "rightSide106.js",
-            sigma: typeof this.sigma() == 'string' ? parseFloat(<any>this.sigma()) : this.sigma(),
-            count: typeof this.count() == 'string' ? parseFloat(<any>this.count()) : this.count()
+            sigma: typeof this.settings.sigma() == 'string' ? parseFloat(<any>this.settings.sigma()) : this.settings.sigma(),
+            count: typeof this.settings.count() == 'string' ? parseFloat(<any>this.settings.count()) : this.settings.count()
         }
         this.worker.postMessage(JSON.stringify(message));
     }

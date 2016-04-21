@@ -27,6 +27,12 @@ export interface IWorkerMessage {
     count: number;
 }
 
+export interface IEvent {
+    species: number;
+    time: number;
+    value: number;
+}
+
 export interface IRightSide {
     (t: number, v: Array<number>): Array<number>;
 }
