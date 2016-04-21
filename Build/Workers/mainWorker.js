@@ -20,7 +20,7 @@ define(["require", "exports", '../Solver', '../NormalDistribution'], function (r
             for (var i = 0; i < n; i++) {
                 solves[i] = new Array();
             }
-            message.x0[42] = val;
+            message.x0[2] = val;
             var gear = new Solver.GearSolver(message.t0, message.x0, rightSide, message.options);
             var s = { solve: message.x0, time: message.t0 };
             do {
@@ -35,7 +35,7 @@ define(["require", "exports", '../Solver', '../NormalDistribution'], function (r
             } while (s.time <= 50000);
             gear.dispose();
             lastSolve = solves.map(function (val) { return val[val.length - 1]; });
-            lastSolve[64] = initials1[count];
+            lastSolve[3] = initials1[count];
             var s = { solve: lastSolve, time: 50000 };
             var gear = new Solver.GearSolver(50000, lastSolve, rightSide, message.options);
             while (s.time <= 100000) {
@@ -50,7 +50,7 @@ define(["require", "exports", '../Solver', '../NormalDistribution'], function (r
             }
             gear.dispose();
             lastSolve = solves.map(function (val) { return val[val.length - 1]; });
-            lastSolve[42] = initials2[count];
+            lastSolve[2] = initials2[count];
             var s = { solve: lastSolve, time: 100000 };
             var gear = new Solver.GearSolver(100000, lastSolve, rightSide, message.options);
             while (s.time < 150000) {

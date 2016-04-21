@@ -154,13 +154,13 @@ define(["require", "exports", "jquery", "knockout", "idd", "tinycolor2", "Build/
             this.worker.onmessage = function (ev) {
                 var data = ev.data;
                 var Time = new Float64Array(data.Time);
-                var Solves = new Array(106);
-                for (var i = 0; i < 106; i++)
+                var Solves = new Array(12);
+                for (var i = 0; i < 12; i++)
                     Solves[i] = new Float64Array(data.Solves[i]);
-                solve1.x.push(Solves[40].map(function (val, i) { return val - Solves[41][i]; }));
-                solve2.x.push(Solves[42].map(function (val, i) { return val - Solves[64][i]; }));
-                solve3.x.push(Solves[57].map(function (val, i) { return val - Solves[84][i]; }));
-                solve4.x.push(Solves[98].map(function (val, i) { return val - Solves[102][i]; }));
+                solve1.x.push(Solves[0].map(function (val, i) { return val - Solves[1][i]; }));
+                solve2.x.push(Solves[2].map(function (val, i) { return val - Solves[3][i]; }));
+                solve3.x.push(Solves[4].map(function (val, i) { return val - Solves[5][i]; }));
+                solve4.x.push(Solves[6].map(function (val, i) { return val - Solves[7][i]; }));
                 if (solve1.t.length == 0) {
                     solve1.t = solve2.t = solve3.t = solve4.t = Time;
                     _this.solves.push(solve1, solve2, solve3, solve4);
@@ -171,10 +171,10 @@ define(["require", "exports", "jquery", "knockout", "idd", "tinycolor2", "Build/
                 _this.averageSolution(_this.averagesSolution.reduce(function (a, b) { return a + b; }) / _this.averagesSolution.length);
             };
             var message = {
-                x0: initVector_(),
+                x0: initVector(),
                 t0: 0,
                 options: { OutputStep: typeof this.step() == 'string' ? parseFloat(this.step()) : this.step() },
-                rightSide: "rightSide106.js",
+                rightSide: "rightSide.js",
                 sigma: typeof this.sigma() == 'string' ? parseFloat(this.sigma()) : this.sigma(),
                 count: typeof this.count() == 'string' ? parseFloat(this.count()) : this.count()
             };
