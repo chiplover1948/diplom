@@ -168,18 +168,18 @@ class ViewModel {
             var data = <Solver.IWorkerResult>ev.data;
             
             var Time = new Float64Array(data.Time);
-            var Solves = new Array<Float64Array>(106);
-            for (var i = 0; i < 106; i++)
+            var Solves = new Array<Float64Array>(12);
+            for (var i = 0; i < 12; i++)
                 Solves[i] = new Float64Array(data.Solves[i]);
-             /*   
+             
             solve1.x.push(Solves[0].map((val, i) => {return val - Solves[1][i]}));
             solve2.x.push(Solves[2].map((val, i) => {return val - Solves[3][i]}));
             solve3.x.push(Solves[4].map((val, i) => {return val - Solves[5][i]}));
-            solve4.x.push(Solves[6].map((val, i) => {return val - Solves[7][i]}));*/
-            solve1.x.push(Solves[40].map((val, i) => {return val - Solves[41][i]}));
+            solve4.x.push(Solves[6].map((val, i) => {return val - Solves[7][i]}));
+            /*solve1.x.push(Solves[40].map((val, i) => {return val - Solves[41][i]}));
             solve2.x.push(Solves[42].map((val, i) => {return val - Solves[64][i]}));
             solve3.x.push(Solves[57].map((val, i) => {return val - Solves[84][i]}));
-            solve4.x.push(Solves[98].map((val, i) => {return val - Solves[102][i]}));
+            solve4.x.push(Solves[98].map((val, i) => {return val - Solves[102][i]}));*/
             
             if (solve1.t.length == 0) {
                 solve1.t = solve2.t = solve3.t = solve4.t = Time;
@@ -192,10 +192,10 @@ class ViewModel {
         }        
         
         var message: Solver.IWorkerMessage = {
-            x0: initVector_(),
+            x0: initVector(),
             t0: 0,
             options: { OutputStep: typeof this.step() == 'string' ? parseFloat(<any>this.step()) : this.step()},
-            rightSide: "rightSide106.js",
+            rightSide: "rightSide.js",
             sigma: typeof this.sigma() == 'string' ? parseFloat(<any>this.sigma()) : this.sigma(),
             count: typeof this.count() == 'string' ? parseFloat(<any>this.count()) : this.count()
         }
